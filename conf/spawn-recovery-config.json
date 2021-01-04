@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "uid": "spawn-recovery",
+    "version": "0.1",
+    "api": "recovery",
+    "info": "Recovery Config with no namespace and no plugin"
+  },
+  "sandboxes": [
+    {
+      "uid": "sandbox-recovery",
+      "info": "recovery [basic acls, no namespace]",
+      "prefix": "admin",
+      "privilege": "global privilege",
+      "verbose": 1,
+      "acls": {
+        "umask": "027",
+        "user": "root",
+        "group":"dialout",
+        "chdir": "/var/tmp"
+      },
+      "commands": [
+        {
+          "uid": "dir",
+          "info" : "list a directory",
+          "usage": {"dirname": "xxxxx"},
+          "exec": {"cmdpath": "/bin/ls", "args": ["-l", "%dirname%"]},
+          "sample": [
+            {"args": {"dirname": "/"}},
+            {"args": {"dirname": "/etc"}},
+            {"args": {"dirname": "/var"}}
+          ]
+        },
+        {
+          "uid": "reboot",
+          "info" : "Reboot the board",
+          "exec": {"cmdpath": "/usr/bin/systemctl", "args": ["reboot"]}
+        },
+	{
+          "uid": "restore",
+          "info": "Take a backup archive file and restore it on the rootfs partition",
+          "usage": {"mode": "xxxx", "part": "yyyy,zzzz"},
+          "encoder": "line",
+          "exec": {"cmdpath": "/usr/libexec/mbbox/restore_backup.sh", "args": ["--mode=?mode?", "--clean=?part?"]},
+          "sample": [
+            {"args": {"mode": "factory", "part": "rootfs,config"}},
+            {"args": {"mode": "usb", "part": "rootfs"}}
+          ]
+        }
+      ]
+    }
+  ]
+}
