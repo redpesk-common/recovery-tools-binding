@@ -40,7 +40,7 @@
           "info": "Take a backup archive file and restore it on the rootfs partition",
           "usage": {"mode": "xxxx", "part": "yyyy,zzzz"},
           "encoder": "line",
-          "exec": {"cmdpath": "/usr/libexec/mbbox/restore_backup.sh", "args": ["--mode=?mode?", "--clean=?part?"]},
+          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--mode=?mode?", "--clean=?part?"]},
           "sample": [
             {"args": {"mode": "factory", "part": "rootfs,config"}},
             {"args": {"mode": "usb", "part": "rootfs"}}
