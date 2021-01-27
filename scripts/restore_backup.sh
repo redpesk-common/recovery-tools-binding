@@ -181,9 +181,12 @@ function do_restore()
         if [[ "$EMULATE" == 0 ]]; then
             (pv -n $RECOVERY_FILE | tar xzp -C $ROOTFS_DIR/) 2>&1
         else
-            TEMPDIR=$(mktemp -d)
-            (pv -n /tmp/example.tar.gz | tar xzp -C $TEMPDIR) 2>&1
-            rm -rf $TEMPDIR
+            echo 0 && sleep 1
+            for i in {80..99}; do
+                echo $i
+                sleep 1
+            done
+            echo 100
         fi
     else
         echo "ERROR: File not found"
