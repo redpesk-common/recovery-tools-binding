@@ -1,6 +1,4 @@
 #!/bin/bash
-
-alias ll='ls -lh'
 SCRIPT=$(basename $BASH_SOURCE)
 ARGS="$@"
 
@@ -15,6 +13,8 @@ RECOVERY_DIR="/recovery"
 ROOTFS_DIR="/rootfs"
 DATA_DIR="/data"
 USB_DIR="/mass-storage"
+
+LOCK_FILE="/tmp/upgrade.lock"
 
 PART_TO_CLEAN=""
 
@@ -48,7 +48,7 @@ Options:
       Get this help
 
 EOF
-        exit 1
+    exit 1
 }
 
 TEMP=$(getopt -o m:,c:,f,e,v,h -l mode:,clean:,force,emulate,verbose,help -n $SCRIPT -- "$@")
@@ -74,12 +74,12 @@ while true; do
             shift 2;;
         -f|--force)
             FORCE=1;
-	    EMULATE=0
+            EMULATE=0
             shift ;;
-	-e|--emulate)
-	    FORCE=0;
-	    EMULATE=1;
-	    shift ;;
+        -e|--emulate)
+            FORCE=0;
+            EMULATE=1;
+            shift ;;
         -v|--verbose)
             VERBOSE=1;
             shift ;;
@@ -99,6 +99,7 @@ done
 [[ "$VERBOSE" == 1 ]] && echo "You launch: '$SCRIPT $ARGS'" && set -x
 [[ "$MODE" == 0 ]] && echo "ERROR: Please select a mode." && exit 1
 [[ "$EMULATE" == 1 ]] && echo "WARNING: Mode emulation. No change will be applied."
+[[ -e $LOCK_FILE ]] && [[ "$FORCE" == 0 ]] && echo "ERROR: Update is locked due to not finished job." && exit 2
 
 function do_mount()
 {
@@ -170,25 +171,27 @@ function do_restore()
     done
 
     #Prepare restore
+    touch $LOCK_FILE
     do_mount
     do_clean $PART_TO_CLEAN
 
     #Action
     if [ -f "$RECOVERY_FILE" ]; then
-	echo "Restore the following image : $RECOVERY_FILE"
-    	if [[ "$EMULATE" == 0 ]]; then
+        echo "Restore the following image : $RECOVERY_FILE"
+        if [[ "$EMULATE" == 0 ]]; then
             (pv -n $RECOVERY_FILE | tar xzp -C $ROOTFS_DIR/) 2>&1
         else
             TEMPDIR=$(mktemp -d)
-    	    (pv -n /tmp/example.tar.gz | tar xzp -C $TEMPDIR) 2>&1
+            (pv -n /tmp/example.tar.gz | tar xzp -C $TEMPDIR) 2>&1
             rm -rf $TEMPDIR
         fi
     else
-	echo "ERROR: File not found"
+        echo "ERROR: File not found"
     fi
 
     #Post restore
     do_umount
+    rm -rf $LOCK_FILE
 }
 
 
