@@ -1,6 +1,10 @@
 #!/bin/bash
 SCRIPT=$(basename $BASH_SOURCE)
+SCRIPT_PATH=$(dirname $0)
 ARGS="$@"
+
+UBOOT_FLAGS_SCRIPT="check-update.sh"
+BOARD_INFO_SCRIPT="get_board_data.sh"
 
 CONFIG_PART="/dev/mmcblk0p2"
 RECOVERY_PART="/dev/mmcblk0p3"
@@ -29,6 +33,10 @@ function usage() {
 Usage: $SCRIPT [options]
 
 Options:
+   -r|--reboot
+      Reboot the system
+   -d|--detect
+      List available mode according to detected HW configuration
    -m|--mode
       Available modes are "factory" and "usb"
       default: none
@@ -51,11 +59,12 @@ EOF
     exit 1
 }
 
-TEMP=$(getopt -o m:,c:,f,e,v,h -l mode:,clean:,force,emulate,verbose,help -n $SCRIPT -- "$@")
+TEMP=$(getopt -o r,d,m:,c:,f,e,v,h -l reboot,detect,mode:,clean:,force,emulate,verbose,help -n $SCRIPT -- "$@")
 [[ $? != 0 ]] && usage
 eval set -- "$TEMP"
 
 #default options values
+REBOOT=0
 VERBOSE=0
 CLEAN=0
 EMULATE=1
@@ -66,6 +75,12 @@ ret=0
 
 while true; do
     case "$1" in
+        -r|--reboot)
+            REBOOT=1
+            shift ;;
+        -d|--detect)
+            DETECT=1
+            shift ;;
         -m|--mode)
             [[ ! -z $2 ]] && MODE=$2;
             shift 2;;
@@ -97,7 +112,7 @@ done
 
 [[ "$HELP" == 1 ]] && usage
 [[ "$VERBOSE" == 1 ]] && echo "You launch: '$SCRIPT $ARGS'" && set -x
-[[ "$MODE" == 0 ]] && echo "ERROR: Please select a mode." && exit 1
+[[ "$MODE" == 0 ]] && [[ "$DETECT" == 0 ]] && [[ "$REBOOT" == 0 ]] && echo "ERROR: Please select a mode." && exit 1
 [[ "$EMULATE" == 1 ]] && echo "WARNING: Mode emulation. No change will be applied."
 [[ -e $LOCK_FILE ]] && [[ "$FORCE" == 0 ]] && echo "ERROR: Update is locked due to not finished job." && exit 2
 
@@ -151,9 +166,28 @@ function do_umount()
     done
 }
 
+function do_detection()
+{
+    local factory_present=0
+    local usb_present=0
+
+    if [[ "$DETECT" == 1 ]]; then
+        if [ -f "$RECOVERY_DIR/$BACKUP_FILE" ]; then factory_present=1; fi
+        if [ -f "$USB_DIR/$BACKUP_FILE" ]; then usb_present=1; fi
+        #Print result
+        # echo ""
+    fi
+
+    do_mount
+
+    $SCRIPT_PATH/$BOARD_INFO_SCRIPT -a
+
+    do_umount
+}
 
 function do_restore()
 {
+    echo "Whole system is going to be restored. Please wait until the end..."
     for mode in $@; do
         case $mode in
             "factory")
@@ -192,14 +226,36 @@ function do_restore()
         echo "ERROR: File not found"
     fi
 
+    #Clean Uboot flags
+    $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT --reset-flags
+
     #Post restore
     do_umount
     rm -rf $LOCK_FILE
 }
 
+function do_reboot
+{
+    echo "WARNING: Board will reboot in 3 secondes..."
+    sleep 3
+    echo "Rebooting..."
+    sleep 1
+    if [[ "$EMULATE" == 0 ]]; then
+        sync && systemctl reboot
+    else
+        echo "Fake reboot done."
+    fi
+}
+
 
 ############ MAIN ############
 
-do_restore $MODE
+if [[ "$DETECT" == 1 ]]; then
+    do_detection
+elif [[ "$DETECT" == 1 ]]; then
+    do_restore $MODE
+elif [[ "$REBOOT" == 1 ]]; then
+    do_reboot
+fi
 
 exit $ret
