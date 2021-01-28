@@ -1,5 +1,6 @@
 #!/bin/bash
 SCRIPT=$(basename $BASH_SOURCE)
+SCRIPT_PATH=$(dirname $0)
 ARGS="$@"
 
 #Put it at the same place of the script
@@ -152,9 +153,8 @@ function get_board_info()
 		print_os_data "rootfs"
 	fi
 	if [[ "$UBOOT" == 1 ]]; then
-		if [ -e $UBOOT_FLAGS_SCRIPT ]; then
-			/$(pwd)/$UBOOT_FLAGS_SCRIPT -p
-		fi
+            source $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT
+            print_data_json "boot_flags" "limit" "$FLAG_BOOTLIMIT" "counter" "$FLAG_BOOTCNT" "upgrade_available" "$FLAG_UPGRADE"
 	fi
 
     show_mac_addr "eth0"
