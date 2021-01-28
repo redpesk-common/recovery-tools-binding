@@ -53,23 +53,23 @@ done
 [[ "$VERBOSE" == 1 ]] && set -x
 
 function read_flags() {
-	LIMIT=$($ENV_GET bootlimit | awk -F"=" '{print $2}')
-	CNT=$($ENV_GET bootcount | awk -F"=" '{print $2}')
-	UPGRADE=$($ENV_GET upgrade_available | awk -F"=" '{print $2}')
+	FLAG_BOOTLIMIT=$($ENV_GET bootlimit | awk -F"=" '{print $2}')
+	FLAG_BOOTCNT=$($ENV_GET bootcount | awk -F"=" '{print $2}')
+	FLAG_UPGRADE=$($ENV_GET upgrade_available | awk -F"=" '{print $2}')
 
 	if [ $VERBOSE == 1 ] || [ $PRINT_FLAGS == 1 ];then
 		echo "========================="
 		echo "    BOOT COUNT FLAGS"
 		echo "-------------------------"
-		echo "BOOTLIMIT : $LIMIT"
-		echo "BOOTCOUNT : $CNT/$LIMIT"
-		echo "UPGRADE   : $UPGRADE"
+		echo "BOOTLIMIT : $FLAG_BOOTLIMIT"
+		echo "BOOTCOUNT : $FLAG_BOOTCNT/$FLAG_BOOTLIMIT"
+		echo "UPGRADE   : $FLAG_UPGRADE"
 		echo "========================="
 	fi
 }
 
 function update_flags() {
-	#local limit=$LIMIT
+	#local limit=$FLAG_BOOTLIMIT
 	local cnt=$1
 	local upgrade=$2
 
@@ -101,4 +101,4 @@ function set_flags() {
 read_flags
 
 
-exit 0
+#exit 0
