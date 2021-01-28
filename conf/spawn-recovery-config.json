@@ -33,9 +33,19 @@
         {
           "uid": "reboot",
           "info" : "Reboot the board",
-          "exec": {"cmdpath": "/usr/bin/systemctl", "args": ["reboot"]}
+          "encoder": "line",
+          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--reboot"]}
         },
-	{
+        {
+          "uid": "info",
+          "info": "Take a backup archive file and restore it on the rootfs partition",
+          "encoder": "json",
+          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--detect","--force"]},
+          "sample": [
+            {"args": {"mode": "factory", "part": "rootfs,config"}}
+          ]
+        },
+	      {
           "uid": "restore",
           "info": "Take a backup archive file and restore it on the rootfs partition",
           "usage": {"mode": "xxxx", "part": "yyyy,zzzz"},
