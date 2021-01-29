@@ -34,16 +34,13 @@
           "uid": "reboot",
           "info" : "Reboot the board",
           "encoder": "line",
-          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--reboot"]}
+          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--reboot","--force"]}
         },
         {
           "uid": "info",
           "info": "Take a backup archive file and restore it on the rootfs partition",
           "encoder": "json",
-          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--detect","--force"]},
-          "sample": [
-            {"args": {"mode": "factory", "part": "rootfs,config"}}
-          ]
+          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--detect","--force"]}
         },
 	      {
           "uid": "restore",
