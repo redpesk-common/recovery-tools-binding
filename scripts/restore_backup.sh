@@ -135,19 +135,19 @@ function do_clean()
     for part in $@; do
         case $part in
             "rootfs")
-                echo -n "Wiping ROOTFS partition... "
+                echo "Wiping ROOTFS partition... "
                 [[ "$EMULATE" == 0 ]] && rm -rf $ROOTFS_DIR/*
-                echo "Done."
+                echo "Success."
                 ;;
             "data")
-                echo -n "Wiping USER DATA partition... "
+                echo "Wiping USER DATA partition... "
                 [[ "$EMULATE" == 0 ]] && rm -rf $DATA_DIR/*
-                echo "Done."
+                echo "Success."
                 ;;
             "config")
-                echo -n "Wiping USER CONFIG partition... "
+                echo "Wiping USER CONFIG partition... "
                 [[ "$EMULATE" == 0 ]] && rm -rf $CONFIG_DIR/*
-                echo "Done."
+                echo "Success."
                 ;;
             *)
                 echo "ERROR: Partition $part not supported.";
@@ -186,14 +186,15 @@ function do_detection()
 
 function do_restore()
 {
-    echo "Whole system is going to be restored. Please wait until the end..."
+    echo "Whole system is going to be restored."
+    echo "Please wait until the end..."
+
     for mode in $@; do
         case $mode in
             "factory")
                 RECOVERY_FILE=$RECOVERY_DIR/$BACKUP_FILE
                 ;;
             "usb")
-                echo "$mode : Mode not supported yet."
                 RECOVERY_FILE=$USB_DIR/$BACKUP_FILE
                 ;;
             *)
@@ -203,34 +204,35 @@ function do_restore()
         esac
     done
 
-    #Prepare restore
-    touch $LOCK_FILE
-    do_mount
-    do_clean $PART_TO_CLEAN
+    if [[ "$EMULATE" == 0 ]]; then
+        #Prepare restore
+        touch $LOCK_FILE
+        do_mount
+        do_clean $PART_TO_CLEAN
 
-    #Action
-    if [ -f "$RECOVERY_FILE" ]; then
-        echo "Restore the following image : $RECOVERY_FILE"
-        if [[ "$EMULATE" == 0 ]]; then
+        #Action
+        if [ -f "$RECOVERY_FILE" ]; then
+            echo "Restore the following image : $RECOVERY_FILE"
             (pv -n $RECOVERY_FILE | tar xzp -C $ROOTFS_DIR/) 2>&1
         else
-            echo 0 && sleep 1
-            for i in {80..99}; do
-                echo $i
-                sleep 1
-            done
-            echo 100
+            echo "ERROR: File not found"
         fi
+
+        #Clean Uboot flags
+        $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT --reset-flags
+
+        #Post restore
+        do_umount
+        rm -rf $LOCK_FILE
     else
-        echo "ERROR: File not found"
+        #Demo transfer
+        echo 0 && sleep 1
+        for i in {90..99}; do
+            echo $i
+            sleep 1
+        done
+        echo 100
     fi
-
-    #Clean Uboot flags
-    $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT --reset-flags
-
-    #Post restore
-    do_umount
-    rm -rf $LOCK_FILE
 }
 
 function do_reboot
@@ -251,10 +253,10 @@ function do_reboot
 
 if [[ "$DETECT" == 1 ]]; then
     do_detection
-elif [[ "$DETECT" == 1 ]]; then
-    do_restore $MODE
 elif [[ "$REBOOT" == 1 ]]; then
     do_reboot
+else
+    do_restore $MODE
 fi
 
 exit $ret
