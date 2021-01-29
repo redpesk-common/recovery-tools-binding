@@ -112,9 +112,9 @@ done
 
 [[ "$HELP" == 1 ]] && usage
 [[ "$VERBOSE" == 1 ]] && echo "You launch: '$SCRIPT $ARGS'" && set -x
-[[ "$MODE" == 0 ]] && [[ "$DETECT" == 0 ]] && [[ "$REBOOT" == 0 ]] && echo "ERROR: Please select a mode." && exit 1
 [[ "$EMULATE" == 1 ]] && echo "WARNING: Mode emulation. No change will be applied."
-[[ -e $LOCK_FILE ]] && [[ "$FORCE" == 0 ]] && echo "ERROR: Update is locked due to not finished job." && exit 2
+[[ "$MODE" == 0 ]] && [[ "$DETECT" == 0 ]] && [[ "$REBOOT" == 0 ]] && echo "ERROR: Please select a mode." && exit 1
+[[ -e $LOCK_FILE ]] && [[ "$FORCE" == 0 ]] && [[ "$REBOOT" == 0 ]] && echo "ERROR: Update is locked due to not finished job." && exit 2
 
 function do_mount()
 {
@@ -212,8 +212,10 @@ function do_restore()
 
         #Action
         if [ -f "$RECOVERY_FILE" ]; then
-            echo "Restore the following image : $RECOVERY_FILE"
+            echo "Start restoring the following image : $RECOVERY_FILE..."
             (pv -n $RECOVERY_FILE | tar xzp -C $ROOTFS_DIR/) 2>&1
+            status=$?
+            [ $status -eq 0 ] && echo "Success!" || (echo "ERROR: Failed (-$status)" && ret=$status)
         else
             echo "ERROR: File not found"
         fi
@@ -240,9 +242,8 @@ function do_reboot
     echo "WARNING: Board will reboot in 3 secondes..."
     sleep 3
     echo "Rebooting..."
-    sleep 1
     if [[ "$EMULATE" == 0 ]]; then
-        sync && systemctl reboot
+        (sleep 3 && sync && systemctl reboot)&
     else
         echo "Fake reboot done."
     fi
