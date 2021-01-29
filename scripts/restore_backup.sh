@@ -168,19 +168,18 @@ function do_umount()
 
 function do_detection()
 {
-    local factory_present=0
-    local usb_present=0
-
-    if [[ "$DETECT" == 1 ]]; then
-        if [ -f "$RECOVERY_DIR/$BACKUP_FILE" ]; then factory_present=1; fi
-        if [ -f "$USB_DIR/$BACKUP_FILE" ]; then usb_present=1; fi
-        #Print result
-        # echo ""
-    fi
+    local factory_present=1
+    local usb_present=1
 
     do_mount
 
-    $SCRIPT_PATH/$BOARD_INFO_SCRIPT -a
+    if [[ "$EMULATE" == 0 ]]; then
+        if [ ! -f "$RECOVERY_DIR/$BACKUP_FILE" ]; then factory_present=0; fi
+        if [ ! -f "$USB_DIR/$BACKUP_FILE" ]; then usb_present=0; fi
+    fi
+    #Result is shared and printed by BOARD_INFO_SCRIPT
+
+    factory_available=$factory_present usb_available=$usb_present $SCRIPT_PATH/$BOARD_INFO_SCRIPT -a
 
     do_umount
 }

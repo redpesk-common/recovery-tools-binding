@@ -123,6 +123,12 @@ function print_os_data()
     print_data_json $1 "PRETTY_NAME" "$PRETTY_NAME" "VERSION" "$VERSION" "VERSION_ID" "$VERSION_ID"
 }
 
+#Return available mode
+function show_available_mode()
+{
+    print_data_json "available_mode" "factory" $factory_available "usb" $usb_available
+}
+
 #Return @MAC in the format 00:11:22:33:44:55
 function show_mac_addr()
 {
@@ -153,10 +159,11 @@ function get_board_info()
 		print_os_data "rootfs"
 	fi
 	if [[ "$UBOOT" == 1 ]]; then
-            source $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT
-            print_data_json "boot_flags" "limit" "$FLAG_BOOTLIMIT" "counter" "$FLAG_BOOTCNT" "upgrade_available" "$FLAG_UPGRADE"
+        source $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT
+        print_data_json "boot_flags" "limit" "$FLAG_BOOTLIMIT" "counter" "$FLAG_BOOTCNT" "upgrade_available" "$FLAG_UPGRADE"
 	fi
 
+    show_available_mode
     show_mac_addr "eth0"
     show_disk_usage "$CONFIG_PART:$CONFIG_DIR" "$ROOTFS_PART:$ROOTFS_DIR" "$DATA_PART:$DATA_DIR"
 }
