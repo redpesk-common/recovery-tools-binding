@@ -19,6 +19,7 @@ DATA_DIR="/data"
 USB_DIR="/mass-storage"
 
 LOCK_FILE="/tmp/upgrade.lock"
+CANCEL_FILE="/tmp/upgrade.canceled"
 
 PART_TO_CLEAN=""
 
@@ -111,10 +112,21 @@ while true; do
 done
 
 [[ "$HELP" == 1 ]] && usage
-[[ "$VERBOSE" == 1 ]] && echo "You launch: '$SCRIPT $ARGS'" && set -x
+[[ "$VERBOSE" == 1 ]] && echo "You launch: '$SCRIPT $ARGS' (PID $$)" && set -x
 [[ "$EMULATE" == 1 ]] && echo "WARNING: Mode emulation. No change will be applied."
 [[ "$MODE" == 0 ]] && [[ "$DETECT" == 0 ]] && [[ "$REBOOT" == 0 ]] && echo "ERROR: Please select a mode." && exit 1
 [[ -e $LOCK_FILE ]] && [[ "$FORCE" == 0 ]] && [[ "$REBOOT" == 0 ]] && echo "ERROR: Update is locked due to not finished job." && exit 2
+[[ -e $CANCEL_FILE ]] && echo "WARNING: Previous upgrade has been canceled. Rebooting will make a boot failure."
+
+function do_cancel() {
+    echo "Cancelling..."
+    [[ -e $LOCK_FILE ]] && rm -rf $LOCK_FILE
+    touch $CANCEL_FILE
+    #Children will be killed by the spawn-binding
+    exit 3
+}
+
+trap 'do_cancel' SIGINT SIGTERM
 
 function do_mount()
 {
@@ -225,7 +237,8 @@ function do_restore()
 
         #Post restore
         do_umount
-        rm -rf $LOCK_FILE
+        [[ -e $LOCK_FILE ]]   && rm -rf $LOCK_FILE
+        [[ -e $CANCEL_FILE ]] && rm -rf $CANCEL_FILE
     else
         #Demo transfer
         echo 0 && sleep 1
