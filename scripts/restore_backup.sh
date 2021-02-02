@@ -233,7 +233,7 @@ function do_restore()
         fi
 
         #Clean Uboot flags
-        $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT --reset-flags
+        $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT --set-flags=0,1
 
         #Post restore
         do_umount
