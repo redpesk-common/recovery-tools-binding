@@ -172,7 +172,9 @@ function do_clean()
 
 function do_umount()
 {
+    echo "Syncing data on disks..."
     sync
+    echo "Unmounting disks..."
     for part in `echo $list_part`; do
         if [ -e $part ]; then umount $part; fi
     done
