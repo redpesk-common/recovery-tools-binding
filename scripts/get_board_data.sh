@@ -64,8 +64,9 @@ while true; do
             shift ;;
         -a|--all)
             RECOVERY=1
-			ROOTFS=1
-			UBOOT=1
+            ROOTFS=1
+            UBOOT=1
+            ALL=1
             shift ;;
         -v|--verbose)
             VERBOSE=1;
@@ -163,9 +164,11 @@ function get_board_info()
         print_data_json "boot_flags" "limit" "$FLAG_BOOTLIMIT" "counter" "$FLAG_BOOTCNT" "upgrade_available" "$FLAG_UPGRADE"
 	fi
 
-    show_available_mode
-    show_mac_addr "eth0"
-    show_disk_usage "$CONFIG_PART:$CONFIG_DIR" "$ROOTFS_PART:$ROOTFS_DIR" "$DATA_PART:$DATA_DIR"
+    if [[ "$ALL" == 1 ]]; then
+        show_available_mode
+        show_mac_addr "eth0"
+        show_disk_usage "$CONFIG_PART:$CONFIG_DIR" "$ROOTFS_PART:$ROOTFS_DIR" "$DATA_PART:$DATA_DIR"
+    fi
 }
 
 ############ MAIN ############
