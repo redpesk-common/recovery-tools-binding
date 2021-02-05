@@ -1,0 +1,225 @@
+.logo {
+  height: 50px;
+  display: flex;
+  align-items: center;
+
+
+  img {
+    max-width: 80%;
+    max-height: 80%;
+    margin-right: 5px;
+  }
+}
+
+.loading {
+  min-height: 84vh;
+}
+
+.main {
+  min-height: 95vh;
+}
+
+.sidebar {
+  padding-top: 1rem;
+  text-align: justify;
+}
+
+.more {
+  cursor: pointer;
+}
+
+.form-check-input {
+  cursor: pointer;
+}
+
+label {
+  cursor: pointer;
+}
+
+/*
+* Terminal
+*/
+
+.terminal-content {
+  position: relative;
+  overflow: scroll;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 25rem;
+  height: 25rem;
+  border-radius: 6px;
+  padding-top: 10px;
+  margin-top: 8px;
+  background-color: rgb(15, 15, 16);
+
+  span.stderr {
+    color: red !important;
+  }
+}
+
+.terminal-heading {
+  height: 2vh;
+  position: relative;
+}
+
+.terminal-heading::before {
+  content: "\2022 \2022 \2022";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: rgb(58, 58, 58);
+  color: #c2c3c4;
+  width: 100%;
+  font-size: 2rem;
+  line-height: 0;
+  padding: 14px 0;
+  text-indent: 4px;
+}
+
+.terminal pre {
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  color: white;
+  padding: 0 1rem 1rem;
+  margin: 0;
+}
+
+/*
+* End terminal
+*/
+
+.cancel {
+  margin-left: 0;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f5f5f5;
+}
+
+.footer>.container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+
+// For loading text
+.blinking {
+  animation: blinkingText 1s linear infinite;
+}
+
+@keyframes blinkingText {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .main {
+    min-height: 90vh;
+  }
+
+  .reboot {
+    margin-left: -80px;
+  }
+
+  .cancel {
+    margin-left: -32px;
+  }
+
+  ngb-progressbar {
+    width: 95%;
+  }
+}
+
+@media (max-width: 576px) {
+  .main {
+    min-height: 70vh;
+    height: auto;
+    padding-bottom: 5vh;
+  }
+
+  .logo {
+    width: 5rem;
+
+    img {
+      max-width: 85%;
+      max-height: 85%;
+      margin-right: 0;
+    }
+  }
+
+  .copy-buttons {
+    button {
+      font-size: 12px;
+      padding: 0;
+    }
+  }
+
+  .reboot {
+    margin-left: -18px;
+  }
+
+  .cancel {
+    margin-left: 24px;
+  }
+
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .sidebar {
+    display: flex;
+
+    >div:nth-child(1) {
+      width: 30%;
+    }
+
+    >div:nth-child(2) {
+      width: 70%;
+      margin-left: 5%;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .main {
+    min-height: auto;
+    padding-bottom: 5vh;
+    margin-bottom: 5vh;
+  }
+
+  .reboot {
+    margin-left: -56px;
+  }
+
+  .cancel {
+    margin-left: -15px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .sidebar {
+    margin: 0;
+    position: fixed;
+    height: 86%;
+    width: 25%;
+    font-size: 14px;
+    padding: 2rem;
+  }
+
+  .main {
+    margin-left: 25%;
+  }
+
+  .reboot {
+    margin-left: 0;
+    margin-left: -56px;
+  }
+
+  ngb-progressbar {
+    width: 100%;
+  }
+
+}
