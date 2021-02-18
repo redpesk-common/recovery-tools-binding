@@ -222,6 +222,8 @@ function do_restore()
         #Prepare restore
         touch $LOCK_FILE
         do_mount
+        #Clean Uboot flags before any modifications
+        $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT --set-flags=0,1
         do_clean $PART_TO_CLEAN
 
         #Action
@@ -233,9 +235,6 @@ function do_restore()
         else
             echo "ERROR: File not found"
         fi
-
-        #Clean Uboot flags
-        $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT --set-flags=0,1
 
         #Post restore
         do_umount
