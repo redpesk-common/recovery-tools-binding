@@ -2,8 +2,8 @@
 SCRIPT=$(basename $BASH_SOURCE)
 ARGS="$@"
 
-ENV_SET="fw_setenv -c /usr/libexec/mbbox/uboot-env.config"
-ENV_GET="fw_printenv -c /usr/libexec/mbbox/uboot-env.config"
+ENV_SET="fw_setenv -c /var/lib/rp-recovery/uboot-env.config"
+ENV_GET="fw_printenv -c /var/lib/rp-recovery/uboot-env.config"
 
 function usage() {
         cat <<EOF >&2
