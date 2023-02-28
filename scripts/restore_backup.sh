@@ -6,10 +6,11 @@ ARGS="$@"
 UBOOT_FLAGS_SCRIPT="check-update.sh"
 BOARD_INFO_SCRIPT="get_board_data.sh"
 
-CONFIG_PART="/dev/mmcblk0p2"
-RECOVERY_PART="/dev/mmcblk0p3"
-ROOTFS_PART="/dev/mmcblk0p5"
-DATA_PART="/dev/mmcblk0p6"
+DISKLABEL="/dev/disk/by-label/"
+CONFIG_PART=$(readlink -f ${DISKLABEL}/config)
+RECOVERY_PART=$(readlink -f ${DISKLABEL}/recovery)
+ROOTFS_PART=$(readlink -f ${DISKLABEL}/rootfs)
+DATA_PART=$(readlink -f ${DISKLABEL}/data)
 USB_PART="/dev/sda1"
 
 CONFIG_DIR="/configs"
@@ -23,8 +24,8 @@ CANCEL_FILE="/tmp/upgrade.canceled"
 
 PART_TO_CLEAN=""
 
-list_part="$CONFIG_PART $RECOVERY_PART $ROOTFS_PART $DATA_PART $USB_PART"
-list_mount_point="$CONFIG_DIR $RECOVERY_DIR $ROOTFS_DIR $DATA_DIR $USB_DIR"
+list_part=($CONFIG_PART $RECOVERY_PART $ROOTFS_PART $DATA_PART $USB_PART)
+list_mount_point=($CONFIG_DIR $RECOVERY_DIR $ROOTFS_DIR $DATA_DIR $USB_DIR)
 
 BACKUP_FILE="backup.tar.gz"
 
@@ -130,15 +131,10 @@ trap 'do_cancel' SIGINT SIGTERM
 
 function do_mount()
 {
-    for folder in `echo $list_mount_point`; do
-        if [ ! -d $folder ]; then mkdir $folder; fi;
+    for n in ${!list_part[@]}; do
+        if [ ! -d ${list_mount_point[$n]} ]; then mkdir ${list_mount_point[$n]}; fi;
+        if [ -e ${list_part[$n]} ]; then mount ${list_part[$n]} ${list_mount_point[$n]}; fi
     done
-
-    mount $CONFIG_PART $CONFIG_DIR
-    mount $RECOVERY_PART $RECOVERY_DIR
-    mount $ROOTFS_PART $ROOTFS_DIR
-    mount $DATA_PART $DATA_DIR
-    if [ -e $USB_PART ]; then mount $USB_PART $USB_DIR; fi;
 }
 
 
@@ -174,9 +170,9 @@ function do_umount()
 {
     echo "Syncing data on disks..."
     sync
-    echo "Unmounting disks..."
-    for part in `echo $list_part`; do
-        if [ -e $part ]; then umount $part; fi
+    echo "Unmounting partitions..."
+    for n in ${!list_mount_point[@]}; do
+        if [ -e ${list_part[$n]} ]; then umount ${list_mount_point[$n]}; fi
     done
 }
 
