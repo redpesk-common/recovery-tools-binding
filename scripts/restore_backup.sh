@@ -11,13 +11,13 @@ CONFIG_PART=$(readlink -f ${DISKLABEL}/config)
 RECOVERY_PART=$(readlink -f ${DISKLABEL}/recovery)
 ROOTFS_PART=$(readlink -f ${DISKLABEL}/rootfs)
 DATA_PART=$(readlink -f ${DISKLABEL}/data)
-USB_PART="/dev/sda1"
+USB_PART=$(readlink -f ${DISKLABEL}/usb-rp-recovery)
 
 CONFIG_DIR="/configs"
 RECOVERY_DIR="/recovery"
 ROOTFS_DIR="/rootfs"
 DATA_DIR="/data"
-USB_DIR="/mass-storage"
+USB_DIR="/usb-rp-recovery"
 
 LOCK_FILE="/tmp/upgrade.lock"
 CANCEL_FILE="/tmp/upgrade.canceled"
