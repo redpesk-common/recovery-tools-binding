@@ -6,11 +6,11 @@ ARGS="$@"
 #Put it at the same place of the script
 UBOOT_FLAGS_SCRIPT="check-update.sh"
 
-CONFIG_PART="/dev/mmcblk0p2"
-RECOVERY_PART="/dev/mmcblk0p3"
-ROOTFS_PART="/dev/mmcblk0p5"
-DATA_PART="/dev/mmcblk0p6"
-USB_PART="/dev/sda1"
+DISKLABEL="/dev/disk/by-label/"
+CONFIG_PART=$(readlink -f ${DISKLABEL}/config)
+RECOVERY_PART=$(readlink -f ${DISKLABEL}/recovery)
+ROOTFS_PART=$(readlink -f ${DISKLABEL}/rootfs)
+DATA_PART=$(readlink -f ${DISKLABEL}/data)
 
 CONFIG_DIR="/configs"
 RECOVERY_DIR="/recovery"
@@ -142,7 +142,11 @@ function show_disk_usage()
     for disk in "$@"; do
         partition=$(echo $disk | awk -F":" '{print $1}')
         name=$(echo $disk | awk -F":" '{print $2}')
+        #Mount missing devices
+        if [ ! -d $name ]; then mkdir -p $name; fi;
+        if ! grep -q "$name" /proc/mounts; then mount $partition $name; local MNTED=1; fi
         print_data_json "disk_usage" "partition" "$partition" "name" "$name" "used" `df -P $partition | awk '{print $5}' | tr -dc '0-9'`
+        if [[ "$MNTED" == 1 ]]; then umount $name; fi
     done
 }
 
@@ -160,6 +164,9 @@ function get_board_info()
 		print_os_data "rootfs"
 	fi
 	if [[ "$UBOOT" == 1 ]]; then
+        FLAG_BOOTLIMIT="n/a"
+        FLAG_BOOTCNT="n/a"
+        FLAG_UPGRADE="n/a"
         source $SCRIPT_PATH/$UBOOT_FLAGS_SCRIPT
         print_data_json "boot_flags" "limit" "$FLAG_BOOTLIMIT" "counter" "$FLAG_BOOTCNT" "upgrade_available" "$FLAG_UPGRADE"
 	fi
