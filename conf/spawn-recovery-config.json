@@ -10,7 +10,6 @@
       "uid": "sandbox-recovery",
       "info": "recovery [basic acls, no namespace]",
       "prefix": "admin",
-      "privilege": "global privilege",
       "verbose": 1,
       "acls": {
         "umask": "027",
