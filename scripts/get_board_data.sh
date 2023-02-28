@@ -3,6 +3,10 @@ SCRIPT=$(basename $BASH_SOURCE)
 SCRIPT_PATH=$(dirname $0)
 ARGS="$@"
 
+source /etc/platform-info/core
+source /etc/platform-info/os
+source /etc/platform-info/devices
+
 #Put it at the same place of the script
 UBOOT_FLAGS_SCRIPT="check-update.sh"
 
@@ -173,7 +177,7 @@ function get_board_info()
 
     if [[ "$ALL" == 1 ]]; then
         show_available_mode
-        show_mac_addr "eth0"
+        show_mac_addr ${HW_ETHERNET_DEVICES}
         show_disk_usage "$CONFIG_PART:$CONFIG_DIR" "$ROOTFS_PART:$ROOTFS_DIR" "$DATA_PART:$DATA_DIR"
     fi
 }
