@@ -2,8 +2,9 @@
 SCRIPT=$(basename $BASH_SOURCE)
 ARGS="$@"
 
-ENV_SET="fw_setenv -c /var/lib/rp-recovery/uboot-env.config"
-ENV_GET="fw_printenv -c /var/lib/rp-recovery/uboot-env.config"
+UBOOT_ENV_CONFIG_FILE="/var/lib/rp-recovery/uboot-env.config"
+ENV_SET="fw_setenv -c ${UBOOT_ENV_CONFIG_FILE}"
+ENV_GET="fw_printenv -c ${UBOOT_ENV_CONFIG_FILE}"
 
 function usage() {
         cat <<EOF >&2
@@ -26,6 +27,11 @@ EOF
         exit 1
 }
 
+if [ ! -f ${UBOOT_ENV_CONFIG_FILE} ];then
+	echo "WARN: Uboot config file does not exist."
+	return 2
+fi
+
 TEMP=$(getopt -o r,s:,p,v,h -l reset-flags,set-flags:,print-flags,verbose,help -n $SCRIPT -- "$@")
 [[ $? != 0 ]] && usage
 eval set -- "$TEMP"
@@ -45,7 +51,7 @@ while true; do
                 -v|--verbose) VERBOSE=1; shift ;;
                 -h|--help) HELP=1; shift ;;
                 --) shift; break;;
-                *) error "Internal error"; exit 1;;
+                *) echo "Internal error"; exit 1;;
         esac
 done
 
