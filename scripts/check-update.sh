@@ -79,15 +79,23 @@ function update_flags() {
 	local cnt=$1
 	local upgrade=$2
 
-	#Unprotect boot0 part
-	echo 0 > /sys/block/mmcblk0boot0/force_ro
+	boot_partition=$(ls /sys/block/mmcblk* | grep -E 'mmcblk[0-9]+boot0$' | head -n 1)
+
+	# Exit if the partition doesn't exist
+	if [ -z "$boot_partition" ]; then
+		echo "Partition boot0 not found."
+		return 1
+	fi
+
+	# Unprotect boot0 part
+	echo 0 > "/sys/block/$boot_partition/force_ro"
 
 	#fw_setenv bootlimit $limit
 	if [[ ! -z $cnt ]];then $ENV_SET bootcount $cnt; fi
 	if [[ ! -z $upgrade ]];then $ENV_SET upgrade_available $upgrade; fi
 
-	#Protect boot0 part
-	echo 1 > /sys/block/mmcblk0boot0/force_ro
+	# Protect boot0 part
+	echo 1 > "/sys/block/$boot_partition/force_ro"
 }
 
 function reset_flags() {
