@@ -33,20 +33,20 @@
           "uid": "reboot",
           "info" : "Reboot the board",
           "encoder": "line",
-          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--reboot","--force"]}
+          "exec": {"cmdpath": "/usr/redpesk/recovery/scripts/restore_backup.sh", "args": ["--reboot","--force"]}
         },
         {
           "uid": "info",
           "info": "Take a backup archive file and restore it on the rootfs partition",
           "encoder": "json",
-          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--detect","--force"]}
+          "exec": {"cmdpath": "/usr/redpesk/recovery/scripts/restore_backup.sh", "args": ["--detect","--force"]}
         },
 	      {
           "uid": "restore",
           "info": "Take a backup archive file and restore it on the rootfs partition",
           "usage": {"mode": "xxxx", "part": "yyyy,zzzz"},
           "encoder": "line",
-          "exec": {"cmdpath": "/var/local/lib/afm/applications/recovery/scripts/restore_backup.sh", "args": ["--mode=?mode?", "--clean=?part?"]},
+          "exec": {"cmdpath": "/usr/redpesk/recovery/scripts/restore_backup.sh", "args": ["--mode=?mode?", "--clean=?part?"]},
           "sample": [
             {"args": {"mode": "factory", "part": "rootfs,config"}},
             {"args": {"mode": "usb", "part": "rootfs"}}
