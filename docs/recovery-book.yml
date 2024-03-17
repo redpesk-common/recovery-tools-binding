@@ -1,0 +1,18 @@
+type: books
+books:
+-
+    id: recovery-tools-binding
+    title: Recovery features
+    description: redpesk OS recovery documentation
+    keywords: recovery, initramfs, dracut
+    author: "IoT.bzh"
+    version: master
+    chapters:
+    - url: 1-recovery-architecture.md
+      name: Understanding recovery mode
+    - url: ../README.md
+      name: Recovery tools mechanisms
+    - url: 2-recovery-usages.md
+      name: Restoring redpesk OS guide
+    - url: 3-angular-build.md
+      name: Web application rebuild
