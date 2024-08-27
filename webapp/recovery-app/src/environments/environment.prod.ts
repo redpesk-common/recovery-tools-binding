@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  GIT_TAG: '1.0.0'
 };

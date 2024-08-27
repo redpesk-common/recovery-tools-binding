@@ -1,12 +1,21 @@
 <ng-container *ngIf="connected && !recoveryEnd">
   <nav class="navbar navbar-light bg-light sticky-top">
-    <span class="navbar-brand mb-0">
-      <span style="color:#d70000">
-        <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>
-      </span> Recovery
-    </span>
+    <div>
+      <div>
+        <span class="navbar-brand mb-0">
+          <span style="color:#d70000">
+            <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>
+          </span> Recovery
+        </span>
+      </div>
+      <div>
+        <small>Version {{gitTag}}</small>
+      </div>
+    </div>
     <div class="logo">
-      <img class="img img-responsive" src="../../assets/redpesk-fish-name.png" alt="">
+      <a href="https://iot.bzh/" target="_blank">
+        <img class="img img-responsive" src="../../../assets/redpesk-fish-name.png" alt="logo redpesk" style="height: 60px; max-width: 100%;">
+      </a>
     </div>
   </nav>
   <div class="sidebar container">
@@ -111,7 +120,7 @@
       <ng-template [ngIf]="tryToReconnect && !recoveryEnd">
         <div class="mt-5 text-center">
           <h1>Connection problem!</h1>
-          <img class="img img-responsive" src="../../assets/404.png" alt="">
+          <img class="img img-responsive" src="../../../assets/404.png" alt="">
           <p>You are not able to connect to the main background process. Maybe
             <span style="color:#d70000">
               <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>
@@ -124,7 +133,7 @@
 
       <ng-template [ngIf]="recoveryEnd">
         <div class="text-center mt-5">
-          <img class="img img-responsive" style="width: 50%;" src="../../assets/redpesk-fish-name.png" alt="">
+          <img class="img img-responsive" style="width: 50%;" src="../../../assets/redpesk-fish-name.png" alt="">
           <div class="mt-5">
             <h1>Recovery Finished</h1>
             <p>Thank you very much for using <span style="color:#d70000">
@@ -268,6 +277,6 @@
 
 <footer class="footer mt-auto py-3 text-center">
   <div class="container-fluid">
-    <span class="text-muted">Copyright© 2020-2024 redpesk®</span>
+    <span class="text-muted">Copyright© 2020-{{ year }} redpesk<sup style="font-size: 50%;">®</sup></span>
   </div>
 </footer>

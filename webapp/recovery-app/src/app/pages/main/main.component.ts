@@ -41,6 +41,8 @@ export interface IBoardInfo {
   encapsulation: ViewEncapsulation.None,
 })
 export class MainComponent implements OnInit {
+  gitTag: string = environment.GIT_TAG;
+  year: string = new Date().getFullYear().toString();
 
   @ViewChild('tcontent') tcontent: ElementRef<any> = {} as ElementRef;
   code: string = '';
