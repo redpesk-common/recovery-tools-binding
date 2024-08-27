@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AFBWebSocketService } from './@core/services/AFB-websocket.service';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AppRoutingModule,
     NgbModule,
   ],
-  providers: [],
+  providers: [AFBWebSocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

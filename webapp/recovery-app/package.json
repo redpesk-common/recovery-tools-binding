@@ -21,7 +21,6 @@
     "@angular/platform-browser-dynamic": "~11.1.0",
     "@angular/router": "~11.1.0",
     "@ng-bootstrap/ng-bootstrap": "^9.0.1",
-    "afbwebsocket": "file:afbwebsocket-0.0.1.tgz",
     "bootstrap": "^4.5.0",
     "file-saver": "^2.0.5",
     "rxjs": "~6.6.0",

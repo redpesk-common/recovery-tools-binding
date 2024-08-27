@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, ElementRef, HostListener, Inject, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AFBWebSocketService } from 'afbwebsocket';
+import { AFBWebSocketService } from '../../@core/services/AFB-websocket.service';
 import { map, switchMap } from 'rxjs/operators';
 import { LogsService } from './logs.service';
 import { saveAs } from 'file-saver';
@@ -117,7 +117,7 @@ export class MainComponent implements OnInit {
     /**
      * Listen for afb-daemon events
      */
-    this.afbService.Status$.pipe(
+    this.afbService.Status$?.pipe(
       switchMap((x: any) => {
         this.connected = x.connected;
         if (!this.connected && !this.tryToReconnect) {
