@@ -104,7 +104,7 @@ export class MainComponent implements OnInit {
     if (environment.production) {
       this.afbService.SetURL(window.location.host);
     } else {
-      this.afbService.SetURL('localhost', '1234');
+      this.afbService.SetURL(window.location.host);
     }
 
     /**
@@ -158,35 +158,40 @@ export class MainComponent implements OnInit {
   }
 
   private _setBoardInfo(d: any) {
-    if (d.data.recovery) {
-      this._boardInfo.recovery.distribution = d.data.recovery.PRETTY_NAME;
-      this._boardInfo.recovery.version_id = d.data.recovery.VERSION_ID;
-    } else if (d.data.rootfs) {
-      this._boardInfo.redpesk.distribution = d.data.rootfs.PRETTY_NAME;
-      this._boardInfo.redpesk.version_id = d.data.rootfs.VERSION_ID;
-    } else if (d.data.macaddr) {
-      Object.keys(d.data.macaddr).forEach(v => {
-        // this._boardInfo.general.mac = `${v}:` + (d.data.macaddr[v] ? d.data.macaddr[v] : '\'\'');
-        this._boardInfo.general.mac = (d.data.macaddr[v] ? d.data.macaddr[v] : '\'\'');
-      })
-    } else if (d.data.disk_usage) {
-      if(!this._boardInfo.disk_usage.find(b => b.name === d.data.disk_usage.name)) {
-        this._boardInfo.disk_usage.push({
-          name: d.data.disk_usage.name,
-          partition: d.data.disk_usage.partition,
-          usage: d.data.disk_usage.used,
-        });
+    if (d.data.stdout) {
+      if (d.data.stdout.recovery) {
+        this._boardInfo.recovery.distribution = d.data.stdout.recovery.PRETTY_NAME;
+        this._boardInfo.recovery.version_id = d.data.stdout.recovery.VERSION_ID;
+      } else if (d.data.stdout.rootfs) {
+        this._boardInfo.redpesk.distribution = d.data.stdout.rootfs.PRETTY_NAME;
+        this._boardInfo.redpesk.version_id = d.data.stdout.rootfs.VERSION_ID;
+      } else if (d.data.stdout.macaddr) {
+        Object.keys(d.data.stdout.macaddr).forEach(v => {
+          // this._boardInfo.general.mac = `${v}:` + (d.data.macaddr[v] ? d.data.macaddr[v] : '\'\'');
+          this._boardInfo.general.mac = (d.data.stdout.macaddr[v] ? d.data.stdout.macaddr[v] : '\'\'');
+        })
+      } else if (d.data.stdout.disk_usage) {
+        if(!this._boardInfo.disk_usage.find(b => b.name === d.data.stdout.disk_usage.name)) {
+          this._boardInfo.disk_usage.push({
+            name: d.data.stdout.disk_usage.name,
+            partition: d.data.stdout.disk_usage.partition,
+            usage: d.data.stdout.disk_usage.used,
+          });
+        }
+      } else if(d.data.stdout.boot_flags) {
+        this._boardInfo.boot_flags.limit = d.data.stdout.boot_flags.limit;
+        this._boardInfo.boot_flags.counter = d.data.stdout.boot_flags.counter;
+        this._boardInfo.boot_flags.upgrade_available = d.data.stdout.boot_flags.upgrade_available;
+      } else if(d.data.stdout.available_mode) {
+        this.factory = (d.data.stdout.available_mode.factory === '0' ? false : true);
+        this.usb = (d.data.stdout.available_mode.usb  === '0' ? false : true);
+  
       }
-    } else if(d.data.boot_flags) {
-      this._boardInfo.boot_flags.limit = d.data.boot_flags.limit;
-      this._boardInfo.boot_flags.counter = d.data.boot_flags.counter;
-      this._boardInfo.boot_flags.upgrade_available = d.data.boot_flags.upgrade_available;
-    } else if(d.data.available_mode) {
-      this.factory = (d.data.available_mode.factory === '0' ? false : true);
-      this.usb = (d.data.available_mode.usb  === '0' ? false : true);
-
+      this.boardInfo$.next(this._boardInfo);
     }
-    this.boardInfo$.next(this._boardInfo);
+    else {
+      
+    }
   }
 
   private _displayTerminal(d: any) {
