@@ -93,7 +93,7 @@ export class MainComponent implements OnInit {
   constructor(
     private afbService: AFBWebSocketService,
     private logService: LogsService,
-    private render: Renderer2,
+    @Inject(Renderer2) private render: Renderer2,
     @Inject(DOCUMENT) private document: Document,
   ) {
     afbService.Init('api', 'HELLO');
