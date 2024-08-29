@@ -1,8 +1,15 @@
+h4 {
+  font-weight: 400;
+}
+
+strong {
+  font-weight: 500;
+}
+
 .logo {
   height: 50px;
   display: flex;
   align-items: center;
-
 
   img {
     max-width: 80%;
@@ -34,6 +41,15 @@
 
 label {
   cursor: pointer;
+}
+
+.accordion-button {
+  color: RGBA(var(--bs-primary-rgb)) !important;
+}
+
+.accordion-button:disabled {
+  color: #6c757d !important;
+  background-color: rgba(0, 0, 0, 0.03) !important;
 }
 
 /*
