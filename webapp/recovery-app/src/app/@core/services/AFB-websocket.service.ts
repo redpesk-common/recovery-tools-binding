@@ -26,13 +26,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, BehaviorSubject, from, ReplaySubject, forkJoin } from 'rxjs';
 import { filter, switchMap, map, take } from 'rxjs/operators';
-import { AFB } from '../afb';
-
-export interface AFBEvent {
-    jtype: string;
-    event: string;
-    data: any;
-}
+import { AFB, AFBEvent, AFBReply } from '@redpesk/afb-ws';
 
 export interface SocketStatus {
     connected: boolean;
@@ -83,10 +77,7 @@ export class AFBWebSocketService {
 
 
     Init(base: string, initialToken?: string) {
-        this.afb = new AFB({
-            base: base,
-            token: initialToken
-        });
+        this.afb = new AFB(base, initialToken);
         this.wsConnect$ = this._wsConnectSubject.asObservable();
         this.wsDisconnect$ = this._wsDisconnectSubject.asObservable();
         this.wsEvent$ = this._wsEventSubject.asObservable();
@@ -145,10 +136,10 @@ export class AFBWebSocketService {
             filter(done => done),
             switchMap(() => {
                 return from(this.ws.call(method, param)
-                    .then((obj: any) => {
+                    .then((obj: AFBReply) => {
                         return obj;
                     },
-                    ).catch((err: any) => {
+                    ).catch((err: AFBReply) => {
                         return (err);
                     },
                     )
