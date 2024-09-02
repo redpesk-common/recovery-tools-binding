@@ -1,0 +1,18 @@
+{
+    // Configure glob patterns for excluding files and folders.
+    "files.exclude": {
+        ".git": true,
+        ".tmp": true,
+        "tmp/": true,
+        "**/node_modules/": true,
+        "**/.angular/": true,
+        "**/dist": true
+    },
+    // Specify paths/files to ignore. (Supports Globs)
+    "cSpell.ignorePaths": [
+        "**/node_modules/**",
+    ],
+    "cSpell.words": [
+        "redpesk"
+    ]
+}

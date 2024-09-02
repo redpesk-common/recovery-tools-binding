@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright (C) 2020-2021 IoT.bzh Company
+ * Copyright (C) 2020-2024 IoT.bzh Company
  * Contact: https://www.iot.bzh/licensing
  *
  * This file is part of the afb-ui-devtools module of the redpesk® project.
