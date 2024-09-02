@@ -4,13 +4,13 @@
         ".git": true,
         ".tmp": true,
         "tmp/": true,
-        "**/node_modules/": true,
-        "**/.angular/": true,
-        "**/dist": true
+        "node_modules/": true,
+        ".angular/": true,
+        "dist": true
     },
-    // Specify paths/files to ignore. (Supports Globs)
-    "cSpell.ignorePaths": [
-        "**/node_modules/**",
+    // Spify paths/files to ignore. (Supports Globs)
+    "cSpe.ignorePaths": [
+        "/node_modules/**",
     ],
     "cSpell.words": [
         "redpesk"

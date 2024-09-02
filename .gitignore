@@ -1,2 +1,4 @@
-webapp/recovery-app/dist
-webapp/recovery-app/node_modules
+/dist
+/node_modules
+/.angular/cache
+/.sass/cache
