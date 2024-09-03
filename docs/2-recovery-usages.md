@@ -4,7 +4,7 @@
 
 ### recovery-tools-binding
 
-By default, the redpesk OS recovery feature requires to install the `recovery-tools-binding` on the redpesk OS target.
+By default, the redpesk OS recovery feature isn't activated so it requires to install the `recovery-tools-binding` on your board.
 
 ```
 dnf install recovery-tools-binding
@@ -14,7 +14,7 @@ It's possible to avoid the `recovery-tools-binding` installation on your target.
 
 ### Example on a supported board
 
-For example, we want to enable the recovery mode on the [SolidRun SolidSense N8 Edge Gateway]({% chapter_link boards-arm64-doc.solidrun---solidsense %}). Some others packages are required like [spawn-binding](https://docs.redpesk.bzh/docs/en/master/redpesk-core/spawn/1-architecture_presentation.html) but they are automatically installed as dependencies with the `recovery-tools-binding` package:
+For example, we want to enable the recovery mode on the [SolidRun SolidSense N8 Edge Gateway]({% chapter_link boards-arm64-doc.solidrun---solidsense %}). Some others packages are required like [spawn-binding]({% chapter_link spawn_binding.architecture-presentation %}) but they are automatically installed as dependencies with the `recovery-tools-binding` package:
 
 ```
 [root@localhost ~]# dnf install recovery-tools-binding
@@ -89,7 +89,7 @@ UPGRADE   : 1
 
 To understand what it does, the script adds the `upgrade_available` variable to U-Boot's environment by using `fw_setenv` to write to `/var/lib/rp-recovery/uboot-env.config`. Please refer [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#rebooting-to-recovery-mode %}) for more U-Boot details.
 
-It has added the `upgrade_available` variable into the Uboot's environment config:
+It has added the `upgrade_available` variable into the U-Boot's environment config:
 
 ```
 soc_type=imx8mn

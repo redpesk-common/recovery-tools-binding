@@ -29,7 +29,7 @@ This binding is composed by some scripts useable from a web application. Its str
 
 ## Packaging
 
-When you install the `recovery-tools-binding` package, the scripts & Angular web application are installed in `/usr/redpesk/recovery` directory. A `systemd` service unit is used to launch the recovery web application within a binder in addition of spawn-binding permissions.
+When you install the `recovery-tools-binding` package, the scripts & Angular web application are installed in `/usr/redpesk/recovery` directory. A `systemd` service unit is used to launch the recovery web application within a binder in addition of [spawn-binding]({% chapter_link spawn_binding.architecture-presentation %}) permissions.
 
 ```
 [root@localhost ~]# rpm -ql recovery-tools-binding
