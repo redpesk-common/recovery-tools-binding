@@ -23,22 +23,22 @@ On the target which contains the recovery web application, you can launch the ap
 
 To build the recovery archive, you can run the following commands:
 
-- install dependancies
+- install dependencies
 
 ```
 npm install
 ```
 
-- build the app + create an archive
+- build the app + create an archive (production mode)
 
 ```
-npm run build:tar
+npm run build:tar-prod
 ```
 
-- (optionnal) build the app + create an archive
+- (optional) build the app + create an archive (development mode)
 
 ```
-npm run build:prod
+npm run build:tar-dev
 ```
 
 ## Further help

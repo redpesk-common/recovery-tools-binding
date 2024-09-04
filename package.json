@@ -8,7 +8,8 @@
     "e2e": "ng e2e",
     "prebuild": "node set-git-tag.js",
     "build:prod": "node set-git-tag.js && ng build --configuration production --aot",
-    "build:tar": "node set-git-tag.js && PREFIX='recovery-tools-binding-' VERSION=$(git describe --tags --abbrev=0) && ng build --configuration production --aot && mkdir -p $PREFIX$VERSION && mv dist/* $PREFIX$VERSION/ && tar -czf $PREFIX$VERSION.tar.gz $PREFIX$VERSION && rm -rf $PREFIX$VERSION"
+    "build:tar-prod": "node set-git-tag.js && PREFIX='recovery-tools-binding-' VERSION=$(git describe --tags --abbrev=0) && ng build --configuration production --aot && mkdir -p $PREFIX$VERSION && mv dist/* $PREFIX$VERSION/ && tar -czf $PREFIX$VERSION.tar.gz $PREFIX$VERSION && rm -rf $PREFIX$VERSION",
+    "build:tar-dev": "node set-git-tag.js && PREFIX='recovery-tools-binding-' VERSION=$(git describe --tags --abbrev=0) && ng build && mkdir -p $PREFIX$VERSION && mv dist/* $PREFIX$VERSION/ && tar -czf $PREFIX$VERSION.tar.gz $PREFIX$VERSION && rm -rf $PREFIX$VERSION"
   },
   "private": true,
   "dependencies": {
