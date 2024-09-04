@@ -120,7 +120,7 @@
       <ng-template [ngIf]="tryToReconnect && !recoveryEnd">
         <div class="mt-5 text-center">
           <h1>Connection problem!</h1>
-          <!-- <img class="img img-responsive" src="../../../assets/404.png" alt="tux 404"> -->
+          <img *ngIf="cachedImage" [src]="cachedImage" alt="tux 404">
           <p>You are not able to connect to the main background process. Maybe
             <span style="color:#d70000">
               <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>

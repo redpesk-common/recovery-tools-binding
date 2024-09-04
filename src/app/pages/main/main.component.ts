@@ -68,6 +68,7 @@ export interface IBoardInfo {
 export class MainComponent implements OnInit {
     gitTag: string = environment.GIT_TAG;
     year: string = new Date().getFullYear().toString();
+    cachedImage: any;
 
     @ViewChild('tcontent') tcontent: ElementRef<any> = {} as ElementRef;
     code: string = '';
@@ -125,6 +126,8 @@ export class MainComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.cacheImage('../../../assets/404.png');
+        
         /**
          * Set afb-daemon url
          */
@@ -178,6 +181,16 @@ export class MainComponent implements OnInit {
             e.returnValue = confirmationMessage;
             return confirmationMessage;
         });
+    }
+
+    cacheImage(imageUrl: string) {
+        fetch(imageUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const objectURL = URL.createObjectURL(blob);
+                this.cachedImage = objectURL;
+            })
+            .catch(error => console.error('Image caching failed:', error));
     }
 
     private _loadBoardInfo(): Observable<any> {
