@@ -187,7 +187,7 @@
               </form>
             </ng-template>
           </ngb-panel>
-          <ngb-panel id="static-2" title="2. Restore from usb" [disabled]="runningAction  || !usb">
+          <ngb-panel id="static-2" title="2. Restore from USB" [disabled]="runningAction  || !usb">
             <ng-template ngbPanelContent>
               <form #usbImage="ngForm" (ngSubmit)="recoverUsbImage(usbImage)">
                 <fieldset [disabled]="runningAction">
