@@ -4,20 +4,26 @@
 
 ### recovery-tools-binding
 
-By default, the redpesk OS recovery feature isn't activated so it requires to install the `recovery-tools-binding` on your board.
+By default, the redpesk OS recovery feature isn't activated so it requires to install the `recovery-tools-binding-scripts` on your redpesk OS image. This package contains necessary [scripts]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#useable-tools-help %}) needed for recovery mode activation.
 
-```
-dnf install recovery-tools-binding
+```sh
+dnf install recovery-tools-binding-scripts
+
+rpm -ql recovery-tools-binding-scripts
+/usr/redpesk/recovery/scripts
+/usr/redpesk/recovery/scripts/check-update.sh
+/usr/redpesk/recovery/scripts/get_board_data.sh
+/usr/redpesk/recovery/scripts/restore_backup.sh
 ```
 
-It's possible to avoid the `recovery-tools-binding` installation on your target. More details [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#force-the-recovery-mode-from-the-bootloader %}).
+It's possible to avoid the `recovery-tools-binding-scripts` installation on your target. More details [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#force-the-recovery-mode-from-the-bootloader %}).
 
 ### Example on a supported board
 
 For example, we want to enable the recovery mode on the [SolidRun SolidSense N8 Edge Gateway]({% chapter_link boards-arm64-doc.solidrun---solidsense %}). Some others packages are required like [spawn-binding]({% chapter_link spawn_binding.architecture-presentation %}) but they are automatically installed as dependencies with the `recovery-tools-binding` package:
 
 ```
-[root@localhost ~]# dnf install recovery-tools-binding
+[root@localhost ~]# dnf install recovery-tools-binding-scripts
 Updating Subscription Management repositories.
 Unable to read consumer identity
 
@@ -32,11 +38,7 @@ Dependencies resolved.
  Package                  Arch     Version                                  Repository                  Size
 ============================================================================================================
 Installing:
- recovery-tools-binding   aarch64  1.0.3-9.redpesk.common.rpbatz            redpesk-middleware-update  421 k
-Installing dependencies:
- bubblewrap               aarch64  0.4.1-6.apps.rpbatz                      redpesk-baseos-update       44 k
- pv                       aarch64  1.6.20-1.redpesk.third.party.rpbatz      redpesk-baseos-update       72 k
- spawn-binding            aarch64  2.0.0+4+g9b248c3-9.redpesk.common.rpbatz redpesk-middleware-update   63 k
+ recovery-tools-binding-scripts   aarch64  1.0.3-12.redpesk.common.rpbatz   redpesk-middleware-update  421 k
 ```
 
 ## How to enable the recovery mode
@@ -205,7 +207,7 @@ u-boot=> source ${scriptaddr}
 
 ## Useable tools help
 
-As described above, these following scripts are installed on redpesk OS when you installed the `recovery-tools-binding` package. They are useful for recovery features interaction like enable the bootcount variable in the U-Boot bootloader.
+As described above, these following scripts are installed on redpesk OS when you installed the `recovery-tools-binding-scripts` package. They are useful for recovery features interaction like enable the bootcount variable in the U-Boot bootloader.
 
 - check_board.sh
 
