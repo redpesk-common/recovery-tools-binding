@@ -30,7 +30,7 @@
 
 export const environment = {
   production: false,
-  GIT_TAG: '1.0.3'
+  GIT_TAG: '1.1.0'
 };
 
 /*
