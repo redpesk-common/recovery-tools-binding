@@ -2,11 +2,11 @@
 
 ## General principles
 
-During an industrial use in an embedded context, you may encounter a corrupted root filesystem, a broken Linux kernel or issues with necessary `systemd` base services. 
+During industrial use in an embedded context, you may encounter a corrupted root filesystem, a broken Linux kernel or issues with necessary `systemd` base services.
 
 If your system fails to boot for any reason, it may be useful to boot it into recovery mode. 
 
-This mode just loads only basic services as root and can repair your system choosing some default actions.
+This mode only loads basic services as root and can repair your system choosing some default actions.
 
 On redpesk OS, this feature enables the recovery of the root file system in different ways:
 - by a default image which is stored on the `/recovery` partition (eMMC/SD card)
@@ -14,7 +14,7 @@ On redpesk OS, this feature enables the recovery of the root file system in diff
 
 > **_Note:_** The USB key might be changed to another device depending on your needs.
 
-A Linux kernel watchdog could be implemented to avoid to boot every time in the recovery mode.
+A Linux kernel watchdog could be implemented to avoid booting all the time in the recovery mode.
 
 ## Restoring essential boot parts
 
@@ -42,11 +42,11 @@ This [package](https://download.redpesk.bzh/redpesk-lts/batz-2.0-update/packages
 
 ### Initramfs creation
 
-To create the initramfs dedicated for redpesk OS, dracut uses configuration files. They are installed in the `/etc/dracut.conf.d/redpesk/` directory thanks to [features/initramfs.ks](https://github.com/redpesk-infra/rp-kickstarts/blob/batz-2.0-update/features/initramfs.ks). 
+To create the initramfs dedicated for redpesk OS, **dracut** uses configuration files. They are installed in the `/etc/dracut.conf.d/redpesk/` directory thanks to [features/initramfs.ks](https://github.com/redpesk-infra/rp-kickstarts/blob/batz-2.0-update/features/initramfs.ks). 
 
 There are dracut modules too which are available in `/usr/lib/dracut/modules.d/99recovery`.
 
-In output, a image must be converted to U-Boot ramdisk in order to be readable for U-Boot.
+In output, an image must be converted to U-Boot ramdisk in order to be readable by U-Boot.
 
 ```bash
 #Create and correct dracut initramfs file to be loaded into U-Boot
@@ -116,17 +116,17 @@ sed -i '/recovery/d' /etc/fstab
 
 ## Recovery from U-Boot (redpesk OS - aarch64)
 
-A [U-boot feature](https://docs.u-boot.org/en/latest/api/bootcount.html#boot-count-limit) is the boot count limit. 
+A [U-Boot feature](https://docs.u-boot.org/en/latest/api/bootcount.html#boot-count-limit) is the boot count limit. 
 
-Enabled by `CONFIG_BOOTCOUNT_LIMIT`, it allows detection of multiple failed attempts to boot redpesk OS. After a power-on reset, the bootcount variable will be initialized to 1, and each reboot will increment the value by 1.
+Enabled by `CONFIG_BOOTCOUNT_LIMIT`, it allows the detection of multiple failed attempts to boot redpesk OS. After a power-on reset, the bootcount variable will be initialized to 1, and each reboot will increment the value by 1.
 
 Typically for redpesk OS, the recovery mode is selected when the bootcount variable is greater than the bootcount limit.
 
-When it is true, U-boot doesn't use _bootcmd_ but _altbootcmd_ (like alternative boot) which goes to the recovery initramfs loading. More details through an example [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#how-to-enable-the-recovery-mode %}).
+When this is the case, U-Boot doesn't use _bootcmd_ but _altbootcmd_ (such as alternative boot) which goes to the recovery initramfs loading. More details in this example [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#how-to-enable-the-recovery-mode %}).
 
 ## Recovery from GRUB (redpesk OS - x86_64)
 
-For x86 boards, another GRUB entry is created following this configuration:
+For x86 boards, another GRUB entry is created by following this configuration:
 
 ```
 menuentry "redpesk Recovery mode" {
@@ -138,4 +138,4 @@ menuentry "redpesk Recovery mode" {
 }
 ```
 
-You have the choice to choose the boot way during GRUB boot selection.
+You have the choice of the boot way during the GRUB boot selection.

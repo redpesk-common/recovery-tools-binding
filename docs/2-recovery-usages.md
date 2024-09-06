@@ -4,7 +4,7 @@
 
 ### recovery-tools-binding
 
-By default, the redpesk OS recovery feature isn't activated so it requires to install the `recovery-tools-binding-scripts` on your redpesk OS image. This package contains necessary [scripts]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#useable-tools-help %}) needed for recovery mode activation.
+By default, the redpesk OS recovery feature isn't activated so it requires the installation of `recovery-tools-binding-scripts` on your redpesk OS image. This package contains necessary [scripts]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#useable-tool-help %}) needed for recovery mode activation.
 
 ```sh
 dnf install recovery-tools-binding-scripts
@@ -16,11 +16,11 @@ rpm -ql recovery-tools-binding-scripts
 /usr/redpesk/recovery/scripts/restore_backup.sh
 ```
 
-It's possible to avoid the `recovery-tools-binding-scripts` installation on your target. More details [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#force-the-recovery-mode-from-the-bootloader %}).
+It is possible to avoid the `recovery-tools-binding-scripts` installation on your target. More details [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#force-the-recovery-mode-from-the-bootloader %}).
 
 ### Example on a supported board
 
-For example, we want to enable the recovery mode on the [SolidRun SolidSense N8 Edge Gateway]({% chapter_link boards-arm64-doc.solidrun---solidsense %}). Some others packages are required like [spawn-binding]({% chapter_link spawn_binding.architecture-presentation %}) but they are automatically installed as dependencies with the `recovery-tools-binding` package:
+For example, you want to enable the recovery mode on the [SolidRun SolidSense N8 Edge Gateway]({% chapter_link boards-arm64-doc.solidrun---solidsense %}) board. Some others packages are required like [spawn-binding]({% chapter_link spawn_binding.architecture-presentation %}) but they are automatically installed as dependencies with the `recovery-tools-binding` package. So, as explained above, you first need to install `recovery-tools-binding-scripts` on the board:
 
 ```
 [root@localhost ~]# dnf install recovery-tools-binding-scripts
@@ -102,7 +102,7 @@ vendor=solidrun
 
 ### Rebooting to recovery mode
 
-The system will go into recovery mode automatically in the third time it boots if you [activate]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#rebooting-to-recovery-mode %}) the recovery mode. Indeed, the `BOOTCOUNT` variable is increased at each boot by the U-Boot bootloader. The limit to its variable is normally `3` that's why you will go to the recovery mode with this value.
+The system will automatically go into recovery mode  the third time it boots if you [activate]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#rebooting-to-recovery-mode %}) the recovery mode. Indeed, the `BOOTCOUNT` variable is increased at each boot by the U-Boot bootloader. The limit to its variable is normally `3` that's why you will go into recovery mode with this value.
 
 ```
 Normal Boot
@@ -120,7 +120,7 @@ Boot into recovery mode...
 30232962 bytes read in 1267 ms (22.8 MiB/s)
 ```
 
-Here we are into the recovery mode!
+Here you are into the recovery mode!
 
 ```
 pre-mount:/# cat /etc/os-release
@@ -163,7 +163,7 @@ If you want to reboot without redpesk restoration, click on the third menu item:
 
 ![recovery-reboot](assets/recovery-reboot.png)
 
-## systemD script to desactivate recovery mode
+## systemd script to deactivate recovery mode
 
 <!-- VAL TODO -->
 
@@ -173,11 +173,11 @@ As explained, you should use a [watchdog](https://www.kernel.org/doc/html/v5.9/w
 
 It may call the `check-update.sh` script to remove the `upgrade_available` variable in U-Boot's environment.
 
-Please note that we can write into U-Boot's environment from the Linux userspace by using `fw_setenv` function from the `uboot-tools` package.
+Please note that you can write into U-Boot's environment from the Linux userspace by using `fw_setenv` function from the `uboot-tools` package.
 
 ## Force the recovery mode from the bootloader
 
-If you want to directly boot to recovery mode for testing purposes, it is possible to avoid a redpesk OS boot or bootcount variable use. For the most part of our boards, we boot redpesk OS on aarch64 (ARM64) boards using U-Boot bootscripts and x86_64 (Intel) boards using GRUB entry menu. For recovery mode, the [alternative bootscript]({% chapter_link recovery-tools-binding.understanding-recovery-mode#recovery-from-u-boot-redpesk-os---aarch64 %}) is used to load the initramfs.
+If you want to directly boot to recovery mode for testing purposes, it is possible to avoid a redpesk OS boot or bootcount variable use. For the most of our boards, we boot redpesk OS on aarch64 (ARM64) boards using U-Boot bootscripts and x86_64 (Intel) boards using GRUB entry menu. For recovery mode, the [alternative bootscript]({% chapter_link recovery-tools-binding.understanding-recovery-mode#recovery-from-u-boot-redpesk-os---aarch64 %}) is used to load the initramfs.
 
 ```
 load ${devtype} ${devnum}:${distro_bootpart} ${fdt_addr_r} imx8mn-compact.dtb
@@ -205,9 +205,9 @@ u-boot=> load mmc 1:1 ${scriptaddr} altboot.scr
 u-boot=> source ${scriptaddr}
 ```
 
-## Useable tools help
+## Useable tool help
 
-As described above, these following scripts are installed on redpesk OS when you installed the `recovery-tools-binding-scripts` package. They are useful for recovery features interaction like enable the bootcount variable in the U-Boot bootloader.
+As described above, these following scripts are installed on redpesk OS when you install the `recovery-tools-binding-scripts` package. They are useful for recovery features interaction such as enabling the bootcount variable in the U-Boot bootloader.
 
 - check_board.sh
 

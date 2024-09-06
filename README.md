@@ -5,15 +5,15 @@
 Restoring a redpesk OS partition is the goal of this binding:
 
 - from the `/recovery` partition backup called `backup.tar.gz`
-- from an USB key with a redpesk image (or others depending on needs)
+- from a USB key with a redpesk image (or others depending on needs)
 
-For that, your embedded system must have to boot on the redpesk `/recovery` partition. It contains an initramfs image which is a redpesk OS minimal image (with DHCP/Ethernet features, redpesk OS application framework). The `recovery-tools-binding` offers an API server running through a web socket (default port: **8080**). It is accessible by using [afb-client]({% chapter_link afb_client.man-page-of-afb-client %}) or the web interface:
+For that, your embedded system must have to boot on the redpesk `/recovery` partition. It contains an initramfs image which is a redpesk OS minimal image (with DHCP/Ethernet features and redpesk OS application framework). The `recovery-tools-binding` offers an API server running through a web socket (default port: **8080**). It is accessible by using [afb-client]({% chapter_link afb_client.man-page-of-afb-client %}) or the web interface:
 
 ![recovery-interface](docs/assets/recovery-menu.png)
 
 ## Structure
 
-This binding is composed by some scripts useable from a web application. Its structure is quite simple to understand:
+This binding is composed of some scripts useable from a web application. Its structure is quite simple to understand:
 
 ```
 .
@@ -29,7 +29,7 @@ This binding is composed by some scripts useable from a web application. Its str
 
 ## Packaging
 
-When you install the `recovery-tools-binding` package, the scripts & Angular web application are installed in `/usr/redpesk/recovery` directory. A `systemd` service unit is used to launch the recovery web application within a binder in addition of [spawn-binding]({% chapter_link spawn_binding.architecture-presentation %}) permissions.
+When you install the `recovery-tools-binding` package, the scripts & Angular web application are installed in `/usr/redpesk/recovery` directory. A `systemd` service unit is used to launch the recovery web application within a binder in addition to [spawn-binding]({% chapter_link spawn_binding.architecture-presentation %}) permissions.
 
 ```
 [root@localhost ~]# rpm -ql recovery-tools-binding
