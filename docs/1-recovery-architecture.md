@@ -24,6 +24,7 @@ On a default redpesk OS image (please refer [here]({% chapter_link hardware-supp
 
 ```
 /run/media/iotbzh/recovery
+|-- backup.tar.gz -> tarball copy of the rootfs (~250Mo for recovery)
 |-- imx8mn-compact-5.4.47-24.solidrun.edge.gateways.bsp.rpbatz.aarch64.dtb -> dtb
 |-- imx8mn-compact.dtb -> dtb (symbolic link)
 |-- initramfs.img -> initramfs made by dracut
