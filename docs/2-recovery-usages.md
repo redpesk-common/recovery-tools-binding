@@ -149,13 +149,23 @@ You can access the `recovery-tools-binding` web interface on the network interfa
 
 ![recovery-interface](assets/recovery-menu.png)
 
+If you don't have any `backup.tar.gz` on both factory and USB modes, you can only choose a reboot without any recovery actions.
+
 ### Restoring redpesk OS from factory version
 
-<!-- VAL to complete -->
+This modes wipes the `/rootfs` partition then rewrites it with the image which is present in `/recovery/backup.tar.gz`.
+
+You can choose to recover others partitions such as `/data` and `config` if you select these items.
+
+![recovery-factory](assets/recovery-restore-factory.png)
 
 ### Restoring redpesk from USB
 
-<!-- VAL to complete -->
+This modes wipes the `/rootfs` partition then rewrites it with the image which is present in `/usb-rp-recovery/backup.tar.gz`. 
+
+You can choose to recover others partitions such as `/data` and `config` if you select these items.
+
+![recovery-usb](assets/recovery-restore-usb.png)
 
 ### Reboot without restoring
 
@@ -163,9 +173,11 @@ If you want to reboot without redpesk restoration, click on the third menu item:
 
 ![recovery-reboot](assets/recovery-reboot.png)
 
-## systemd script to deactivate recovery mode
+## How to deactivate recovery mode
 
-<!-- VAL TODO -->
+### systemd script to disable U-Boot's bootcount 
+
+A `systemd` service can be used to  call the `check-update.sh` script to remove the `upgrade_available` variable in U-Boot's environment.
 
 ### Linux kernel watchdog to disable U-Boot's bootcount
 
@@ -177,7 +189,9 @@ Please note that you can write into U-Boot's environment from the Linux userspac
 
 ## Force the recovery mode from the bootloader
 
-If you want to directly boot to recovery mode for testing purposes, it is possible to avoid a redpesk OS boot or bootcount variable use. For the most of our boards, we boot redpesk OS on aarch64 (ARM64) boards using U-Boot bootscripts and x86_64 (Intel) boards using GRUB entry menu. For recovery mode, the [alternative bootscript]({% chapter_link recovery-tools-binding.understanding-recovery-mode#recovery-from-u-boot-redpesk-os---aarch64 %}) is used to load the initramfs.
+If you want to directly boot to recovery mode for testing purposes, it is possible to avoid a redpesk OS boot or bootcount variable use. For the most of our boards, we boot redpesk OS on aarch64 (ARM64) boards using U-Boot bootscripts and x86_64 (Intel) boards using GRUB entry menu. 
+
+For recovery mode, the [alternative bootscript]({% chapter_link recovery-tools-binding.understanding-recovery-mode#recovery-from-u-boot-redpesk-os---aarch64 %}) is used to load the initramfs.
 
 ```
 load ${devtype} ${devnum}:${distro_bootpart} ${fdt_addr_r} imx8mn-compact.dtb
