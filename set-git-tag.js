@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Fetch the latest git tag
-const gitTag = execSync('git describe --tags --abbrev=0').toString().trim();
+const gitTag = execSync('git tag --sort=v:refname | tail -n 1').toString().trim();
 
 // Define the environment file path
 const envFilePathProd = path.join(__dirname, 'src', 'environments', 'environment.prod.ts');
@@ -28,4 +28,5 @@ fs.writeFileSync(envFilePathProd, envFileContentProd, 'utf8');
 fs.writeFileSync(pkgFilePath, pkgFileContent, 'utf8');
 
 console.log(`Set GIT_TAG to ${gitTag} in environment.prod.ts`);
+console.log(`Set GIT_TAG to ${gitTag} in environment.ts`);
 console.log(`Set version to ${gitTag} in package.json`);

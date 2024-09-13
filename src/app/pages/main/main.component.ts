@@ -236,22 +236,19 @@ export class MainComponent implements OnInit {
 
     private _displayTerminal(d: any) {
         this.logService.push(d);
-        if (d.data.output) {
-            if (d.data.output.match(/^\d{1,3}$/)) {
-                this.progress = d.data.output;
+        if (d.data.stdout) {
+            if (d.data.stdout.match(/^\d{1,3}$/)) {
+                this.progress = d.data.stdout;
             } else {
-                this.code += '\n' + d.data.output;
+                this.code += '\n' + d.data.stdout;
             }
         }
         if (d.data.stderr) {
-            this.code += '\n<span class="stderr">' + d.data.stderr.join('\n') + '</span>';
-        }
-        if (d.data.stdout) {
-            this.code += `\n${d.data.stdout.join('\n')}`;
+            this.code += '\n<span class="stderr">' + d.data.stderr.toString() + '</span>';
         }
         if (d.data.status && d.data.status.exit === 0) {
             if (!this.rebooting) {
-                this.code += '\n' + "Finished."
+                this.code += '\n' + "Finished.";
                 this.finishedAction = true;
             }
         }
