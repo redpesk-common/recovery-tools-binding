@@ -29,7 +29,6 @@ import { MainComponent } from './main.component';
 import { MainRoutingModule } from './main-routing.module';
 import { NgbAccordionModule, NgbProgressbarModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-// import { AfbwebsocketModule } from 'afbwebsocket';
 
 
 
@@ -40,7 +39,6 @@ import { FormsModule } from '@angular/forms';
     MainRoutingModule,
     NgbAccordionModule,
     FormsModule,
-    // AfbwebsocketModule,
     NgbProgressbarModule,
     NgbTooltipModule,
   ]

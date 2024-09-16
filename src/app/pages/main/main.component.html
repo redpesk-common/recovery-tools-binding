@@ -31,7 +31,7 @@
     <div class="border p-3 text-left">
       <div class="d-flex">
         <h4>Board Info</h4>
-        <span class="ml-2 more">
+        <span class="ms-2 more">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle"
             viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -66,19 +66,19 @@
             <strong>Redpesk</strong>
             <div class="row mb-4">
               <div class="col">Distribution:</div>
-              <div class="col"><strong>{{board.redpesk.distribution}}</strong></div>
+              <div class="col p-0" style="text-align: start;"><strong>{{board.redpesk.distribution}}</strong></div>
               <div class="w-100"></div>
               <div class="col">Version Id:</div>
-              <div class="col"><strong>{{board.redpesk.version_id}}</strong></div>
+              <div class="col p-0"><strong>{{board.redpesk.version_id}}</strong></div>
               <div class="w-100"></div>
             </div>
             <strong>Recovery</strong>
             <div class="row mb-3">
               <div class="col">Distribution:</div>
-              <div class="col"><strong>{{board.recovery.distribution}}</strong></div>
+              <div class="col p-0"><strong>{{board.recovery.distribution}}</strong></div>
               <div class="w-100"></div>
               <div class="col">Version Id:</div>
-              <div class="col"><strong>{{board.recovery.version_id}}</strong></div>
+              <div class="col p-0"><strong>{{board.recovery.version_id}}</strong></div>
               <div class="w-100"></div>
             </div>
             <strong>Boot Flags</strong>
@@ -254,7 +254,7 @@
                 <button type="button" class="btn btn-secondary btn-sm" (click)="copyToClipboard()" placement="left"
                   ngbTooltip="Copy console output">Copy Console</button>
               </div>
-              <div class="btn-group ml-2" role="group" aria-label="Basic example">
+              <div class="btn-group ms-2" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-secondary btn-sm" placement="right"
                   ngbTooltip="Download output and json logs" (click)="download()">Download Logs</button>
               </div>
@@ -262,7 +262,7 @@
             <ngb-progressbar *ngIf="showProgress()" [showValue]="true" type="info" [value]="progress" height="1.5rem">
             </ngb-progressbar>
           </div>
-          <div class="col-md-1 col-4">
+          <div class="col-md-1 col-4 text-end">
             <button *ngIf="showProgress()" class="btn btn-danger btn-sm cancel" (click)="cancel()">Cancel</button>
             <button *ngIf="finishedAction" class="btn btn-success btn-sm reboot" (click)="reboot()">Reboot Board</button>
           </div>

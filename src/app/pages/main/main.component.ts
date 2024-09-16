@@ -162,13 +162,6 @@ export class MainComponent implements OnInit {
                     if (d.event === 'recovery/admin/info') {
                         this._setBoardInfo(d);
                     }
-                    // if (d.event === 'recovery/admin/reboot') {
-                    //   if (d.data.status && d.data.status.exit == 0) {
-                    //     setTimeout(() => {
-                    //       this.recoveryEnd = true;
-                    //     }, 5000);
-                    //   }
-                    // }
                 }))
             })
         ).subscribe();
@@ -200,14 +193,14 @@ export class MainComponent implements OnInit {
     private _setBoardInfo(d: any) {
         if (d.data.stdout) {
             if (d.data.stdout.recovery) {
-                this._boardInfo.recovery.distribution = d.data.stdout.recovery.PRETTY_NAME;
+                const recoveryPrettyName = d.data.stdout.recovery.PRETTY_NAME.split(' ').slice(2, 3).join(' ');
+                this._boardInfo.recovery.distribution = recoveryPrettyName;
                 this._boardInfo.recovery.version_id = d.data.stdout.recovery.VERSION_ID;
             } else if (d.data.stdout.rootfs) {
                 this._boardInfo.redpesk.distribution = d.data.stdout.rootfs.PRETTY_NAME;
                 this._boardInfo.redpesk.version_id = d.data.stdout.rootfs.VERSION_ID;
             } else if (d.data.stdout.macaddr) {
                 Object.keys(d.data.stdout.macaddr).forEach(v => {
-                    // this._boardInfo.general.mac = `${v}:` + (d.data.macaddr[v] ? d.data.macaddr[v] : '\'\'');
                     this._boardInfo.general.mac = (d.data.stdout.macaddr[v] ? d.data.stdout.macaddr[v] : '\'\'');
                 })
             } else if (d.data.stdout.disk_usage) {
