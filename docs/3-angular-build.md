@@ -29,16 +29,16 @@ To build the recovery archive, you can run the following commands:
 npm install
 ```
 
-- build the app + create an archive (production mode)
+- build the app (production mode)
 
 ```
-npm run build:tar-prod
+npm run build:prod
 ```
 
-- (optional) build the app + create an archive (development mode)
+- (optional) build the app (development mode with debug files)
 
 ```
-npm run build:tar-dev
+npm run build:dev
 ```
 
 ## Further help
