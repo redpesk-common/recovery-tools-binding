@@ -3,7 +3,7 @@
  * Copyright (C) 2020-2024 IoT.bzh Company
  * Contact: https://www.iot.bzh/licensing
  *
- * This file is part of the afb-ui-devtools module of the redpesk® project.
+ * This file is part of the recovery-tools-binding module of the redpesk® project.
  *
  * $RP_BEGIN_LICENSE$
  * Commercial License Usage
@@ -30,7 +30,7 @@
 
 export const environment = {
   production: false,
-  GIT_TAG: '1.1.0'
+  GIT_TAG: '1.1.1'
 };
 
 /*
