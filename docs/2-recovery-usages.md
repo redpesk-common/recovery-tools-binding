@@ -161,7 +161,9 @@ You can choose to recover others partitions such as `/data` and `config` if you 
 
 ### Restoring redpesk from USB
 
-This modes wipes the `/rootfs` partition then rewrites it with the image which is present in `/usb-rp-recovery/backup.tar.gz`. 
+This modes wipes the `/rootfs` partition then rewrites it with the image which is present in `/usb-backup/backup.tar.gz`. So you have to create a USB key which will contain this backup tarball as the **same output name** with the same path when it's mounted in the initramfs.
+
+*NOTE: The recovery mode (initramfs) only supports FAT32 partitions for mounted partitions. So because of FAT32 limitations, your partition label must be named **usb-backup** that the recovery is looking for.*
 
 You can choose to recover others partitions such as `/data` and `config` if you select these items.
 

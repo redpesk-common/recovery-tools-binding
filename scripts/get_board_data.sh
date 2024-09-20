@@ -15,13 +15,13 @@ CONFIG_PART=$(readlink -f ${DISKLABEL}/config)
 RECOVERY_PART=$(readlink -f ${DISKLABEL}/recovery)
 ROOTFS_PART=$(readlink -f ${DISKLABEL}/rootfs)
 DATA_PART=$(readlink -f ${DISKLABEL}/data)
-USB_PART=$(readlink -f ${DISKLABEL}/usb-rp-recovery)
+USB_PART=$(readlink -f ${DISKLABEL}/usb-backup)
 
 CONFIG_DIR="/configs"
 RECOVERY_DIR="/recovery"
 ROOTFS_DIR="/rootfs"
 DATA_DIR="/data"
-USB_DIR="/usb-rp-recovery"
+USB_DIR="/usb-backup"
 
 function usage() {
         cat <<EOF >&2
