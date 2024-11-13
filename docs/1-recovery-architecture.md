@@ -76,6 +76,8 @@ dnf remove -y dracut-redpesk-recovery
 %end
 ```
 
+If you want to see our Dracut recipes used for the redpesk OS recovery mode, you can find [here](https://download.redpesk.bzh/redpesk-lts/batz-2.0-update/packages/middleware/source/tree/Packages/d/) the sources.
+
 ### backup.tar.gz creation
 
 The redpesk OS backup is just an archive of the root filesystem.
