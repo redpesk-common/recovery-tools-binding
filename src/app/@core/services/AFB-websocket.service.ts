@@ -213,9 +213,9 @@ export class AFBWebSocketService {
         this._statusSubject.next(Object.assign({}, this._status));
     }
 
-    getInfoVerbs(): Observable<Array<object>> {
+    getInfoVerbs(): Observable<Array<object | undefined>> {
         return this.getApis().pipe(
-            map((data) => {
+            switchMap((data) => {
                 const tasks$: Observable<{ api: string; info: any; } | undefined>[] = [];
                 data.forEach(api => {
                     tasks$.push(this.Send(api + '/info', {}).pipe(
@@ -229,9 +229,6 @@ export class AFBWebSocketService {
                     ));
                 });
                 return forkJoin(...tasks$);
-            }),
-            switchMap(res => {
-                return res;
             })
         );
     }
