@@ -152,86 +152,101 @@
     <div class="container main">
       <div class="actions mt-4">
         <h4>Choose one of the following actions</h4>
-        <ngb-accordion [closeOthers]="true">
-          <ngb-panel id="static-1" title="1. Restore factory version" [disabled]="runningAction || !factory">
-            <ng-template ngbPanelContent>
-              <form #factoryImage="ngForm" (ngSubmit)="recoverFactoryImage(factoryImage)">
-                <fieldset [disabled]="runningAction">
-                  <div class="row align-items-center">
-                    <div class="col-md-4">
-                      Choose partition(s) you want to wipe up
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="rootfs" disabled
-                          [(ngModel)]="factoryConfig.rootfs" name="rootfs">
-                        <label class="form-check-label" for="rootfs">Rootfs</label>
+        <div ngbAccordion>
+          <div ngbAccordionItem [disabled]="runningAction || !factory">
+            <h2 ngbAccordionHeader>
+              <button ngbAccordionButton>1. Restore factory version</button>
+            </h2>
+            <div ngbAccordionCollapse>
+              <div ngbAccordionBody>
+                <form #factoryImage="ngForm" (ngSubmit)="recoverFactoryImage(factoryImage)">
+                  <fieldset [disabled]="runningAction">
+                    <div class="row align-items-center">
+                      <div class="col-md-4">
+                        Choose partition(s) you want to wipe up
                       </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="data"
-                          [(ngModel)]="factoryConfig.data" name="data">
-                        <label class="form-check-label" for="data">Data</label>
+                      <div class="col-md-6">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="rootfs" disabled
+                            [(ngModel)]="factoryConfig.rootfs" name="rootfs">
+                          <label class="form-check-label" for="rootfs">Rootfs</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="data"
+                            [(ngModel)]="factoryConfig.data" name="data">
+                          <label class="form-check-label" for="data">Data</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="config"
+                            [(ngModel)]="factoryConfig.config" name="config">
+                          <label class="form-check-label" for="config">Configs</label>
+                        </div>
                       </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="config"
-                          [(ngModel)]="factoryConfig.config" name="config">
-                        <label class="form-check-label" for="config">Configs</label>
+                      <div class="col-md-2 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-sm btn-primary"
+                          [disabled]="checkForm('factoryConfig')">Restore</button>
                       </div>
                     </div>
-                    <div class="col-md-2 d-flex justify-content-center">
-                      <button type="submit" class="btn btn-sm btn-primary"
-                        [disabled]="checkForm('factoryConfig')">Restore</button>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div ngbAccordionItem [disabled]="runningAction  || !usb">
+            <h2 ngbAccordionHeader>
+              <button ngbAccordionButton>2. Restore from USB</button>
+            </h2>
+            <div ngbAccordionCollapse>
+              <div ngbAccordionBody>
+                <form #usbImage="ngForm" (ngSubmit)="recoverUsbImage(usbImage)">
+                  <fieldset [disabled]="runningAction">
+                    <div class="row align-items-center">
+                      <div class="col-md-4">
+                        Choose partition(s) you want to wipe up
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="rootfs" disabled
+                            [(ngModel)]="usbConfig.rootfs" name="rootfs">
+                          <label class="form-check-label" for="rootfs">Rootfs</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="data" [(ngModel)]="usbConfig.data"
+                            name="data">
+                          <label class="form-check-label" for="data">Data</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="config"
+                            [(ngModel)]="usbConfig.config" name="config">
+                          <label class="form-check-label" for="config">Configs</label>
+                        </div>
+                      </div>
+                      <div class="col-md-2 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-sm btn-primary"
+                          [disabled]="checkForm('usbConfig')">Restore</button>
+                      </div>
                     </div>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div ngbAccordionItem [disabled]="runningAction">
+            <h2 ngbAccordionHeader>
+              <button ngbAccordionButton>3. Reboot without restoring</button>
+            </h2>
+            <div ngbAccordionCollapse>
+              <div ngbAccordionBody>
+                <div class="row">
+                  <div class="col-md-6">Quit recovery mode without making any change on board system.</div>
+                  <div class="col-md-6">
+                    <button class="btn btn-success btn-sm" (click)="reboot()">Reboot Board</button>
                   </div>
-                </fieldset>
-              </form>
-            </ng-template>
-          </ngb-panel>
-          <ngb-panel id="static-2" title="2. Restore from USB" [disabled]="runningAction  || !usb">
-            <ng-template ngbPanelContent>
-              <form #usbImage="ngForm" (ngSubmit)="recoverUsbImage(usbImage)">
-                <fieldset [disabled]="runningAction">
-                  <div class="row align-items-center">
-                    <div class="col-md-4">
-                      Choose partition(s) you want to wipe up
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="rootfs" disabled
-                          [(ngModel)]="usbConfig.rootfs" name="rootfs">
-                        <label class="form-check-label" for="rootfs">Rootfs</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="data" [(ngModel)]="usbConfig.data"
-                          name="data">
-                        <label class="form-check-label" for="data">Data</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="config"
-                          [(ngModel)]="usbConfig.config" name="config">
-                        <label class="form-check-label" for="config">Configs</label>
-                      </div>
-                    </div>
-                    <div class="col-md-2 d-flex justify-content-center">
-                      <button type="submit" class="btn btn-sm btn-primary"
-                        [disabled]="checkForm('usbConfig')">Restore</button>
-                    </div>
-                  </div>
-                </fieldset>
-              </form>
-            </ng-template>
-          </ngb-panel>
-          <ngb-panel id="static-3" title="3. Reboot without restoring" [disabled]="runningAction">
-            <ng-template ngbPanelContent>
-              <div class="row">
-                <div class="col-md-6">Quit recovery mode without making any change on board system.</div>
-                <div class="col-md-6">
-                  <button class="btn btn-success btn-sm" (click)="reboot()">Reboot Board</button>
                 </div>
               </div>
-            </ng-template>
-          </ngb-panel>
-        </ngb-accordion>
+            </div>
+          </div>
+        </div>
 
       </div>
 

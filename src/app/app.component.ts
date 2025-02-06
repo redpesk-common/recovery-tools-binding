@@ -30,7 +30,8 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'rpr-root',
   template: '<router-outlet></router-outlet>',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  standalone: false
 })
 export class AppComponent {
   title = 'recovery-app';

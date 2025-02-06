@@ -64,6 +64,7 @@ export interface IBoardInfo {
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MainComponent implements OnInit {
     gitTag: string = environment.GIT_TAG;
