@@ -4,7 +4,7 @@
 
 During industrial use in an embedded context, you may encounter a corrupted root filesystem, a broken Linux kernel or issues with necessary `systemd` base services.
 
-If your system fails to boot for any reason, it may be useful to boot it into recovery mode. 
+If your system fails to boot for any reason, it may be useful to boot it into recovery mode.
 
 This mode only loads basic services as root and can repair your system choosing some default actions.
 
@@ -33,17 +33,17 @@ On a default redpesk OS image (please refer [here]({% chapter_link hardware-supp
 
 ### Restoration mechanism
 
-As shown in the following illustration, the recovery mode restores the kernel image, the device tree blob and the rootfs archive when activated. 
+As shown in the following illustration, the recovery mode restores the kernel image, the device tree blob and the rootfs archive when activated.
 
 ![recovery-mode](assets/recovery-mode.png)
 
 These components have been generated during the image build. It is specified by `dracut-redpesk-recovery`.
 
-This [package](https://download.redpesk.bzh/redpesk-lts/batz-2.0-update/packages/middleware/aarch64/os/Packages/d/) contains **dracut** configuration recipes to build the initramfs dedicated for recovery mode booting. More details [in this section]({% chapter_link recovery-tools-binding.understanding-recovery-mode#initramfs-creation %}).
+This [package](https://download.redpesk.bzh/redpesk-lts/{{ site.redpesk-os.update }}/packages/middleware/aarch64/os/Packages/d/) contains **dracut** configuration recipes to build the initramfs dedicated for recovery mode booting. More details [in this section]({% chapter_link recovery-tools-binding.understanding-recovery-mode#initramfs-creation %}).
 
 ### Initramfs creation
 
-To create the initramfs dedicated for redpesk OS, **dracut** uses configuration files. They are installed in the `/etc/dracut.conf.d/redpesk/` directory thanks to [features/initramfs.ks](https://github.com/redpesk-infra/rp-kickstarts/blob/batz-2.0-update/features/initramfs.ks). 
+To create the initramfs dedicated for redpesk OS, **dracut** uses configuration files. They are installed in the `/etc/dracut.conf.d/redpesk/` directory thanks to [features/initramfs.ks](https://github.com/redpesk-infra/rp-kickstarts/blob/{{ site.redpesk-os.update }}/features/initramfs.ks).
 
 There are dracut modules too which are available in `/usr/lib/dracut/modules.d/99recovery`.
 
@@ -76,12 +76,12 @@ dnf remove -y dracut-redpesk-recovery
 %end
 ```
 
-If you want to see our Dracut recipes used for the redpesk OS recovery mode, you can find [here](https://download.redpesk.bzh/redpesk-lts/batz-2.0-update/packages/middleware/source/tree/Packages/d/) the sources.
+If you want to see our Dracut recipes used for the redpesk OS recovery mode, you can find [here](https://download.redpesk.bzh/redpesk-lts/{{ site.redpesk-os.update }}/packages/middleware/source/tree/Packages/d/) the sources.
 
 ### backup.tar.gz creation
 
 The redpesk OS backup is just an archive of the root filesystem.
-It is created by the [features/factory_backup.ks](https://github.com/redpesk-infra/rp-kickstarts/blob/batz-2.0-update/features/factory_backup.ks) kickstart.
+It is created by the [features/factory_backup.ks](https://github.com/redpesk-infra/rp-kickstarts/blob/{{ site.redpesk-os.update }}/features/factory_backup.ks) kickstart.
 
 ```
 tar -cvpzf $dir/backup.tar.gz \
@@ -101,7 +101,7 @@ It will override the `/root` partition during the restoration.
 
 ### kernel & dtb copy
 
-At each redpesk OS image build, the kernel and the dtb are copied to the `recovery` partition. It is done by the [features/recovery.ks](https://github.com/redpesk-infra/rp-kickstarts/blob/batz-2.0-update/features/recovery.ks) kickstart.
+At each redpesk OS image build, the kernel and the dtb are copied to the `recovery` partition. It is done by the [features/recovery.ks](https://github.com/redpesk-infra/rp-kickstarts/blob/{{ site.redpesk-os.update }}/features/recovery.ks) kickstart.
 
 ```
 %post --erroronfail --log /tmp/post-recovery.log
@@ -119,7 +119,7 @@ sed -i '/recovery/d' /etc/fstab
 
 ## Recovery from U-Boot (redpesk OS - aarch64)
 
-A [U-Boot feature](https://docs.u-boot.org/en/latest/api/bootcount.html#boot-count-limit) is the boot count limit. 
+A [U-Boot feature](https://docs.u-boot.org/en/latest/api/bootcount.html#boot-count-limit) is the boot count limit.
 
 Enabled by `CONFIG_BOOTCOUNT_LIMIT`, it allows the detection of multiple failed attempts to boot redpesk OS. After a power-on reset, the bootcount variable will be initialized to 1, and each reboot will increment the value by 1.
 
