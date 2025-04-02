@@ -28,7 +28,7 @@ import { Component, ElementRef, HostListener, Inject, OnInit, Renderer2, ViewChi
 import { AFBWebSocketService } from '../../@core/services/AFB-websocket.service';
 import { map, switchMap } from 'rxjs/operators';
 import { LogsService } from './logs.service';
-import { saveAs } from 'file-saver';
+import { saveAs } from 'file-saver-es';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -128,7 +128,7 @@ export class MainComponent implements OnInit {
 
     ngOnInit(): void {
         this.cacheImage('../../../assets/404.png');
-        
+
         /**
          * Set afb-daemon url
          */
