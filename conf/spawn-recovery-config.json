@@ -1,7 +1,7 @@
 {
   "metadata": {
     "uid": "spawn-recovery",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "api": "recovery",
     "info": "Recovery Config with no namespace and no plugin"
   },
@@ -14,42 +14,93 @@
       "acls": {
         "umask": "027",
         "user": "root",
-        "group":"dialout",
+        "group": "dialout",
         "chdir": "/var/tmp"
       },
       "commands": [
         {
           "uid": "dir",
-          "info" : "list a directory",
-          "usage": {"dirname": "xxxxx"},
-          "exec": {"cmdpath": "/bin/ls", "args": ["-l", "%dirname%"]},
+          "info": "list a directory",
+          "usage": {
+            "dirname": "xxxxx"
+          },
+          "exec": {
+            "cmdpath": "/bin/ls",
+            "args": [
+              "-l",
+              "%dirname%"
+            ]
+          },
           "sample": [
-            {"args": {"dirname": "/"}},
-            {"args": {"dirname": "/etc"}},
-            {"args": {"dirname": "/var"}}
+            {
+              "args": {
+                "dirname": "/"
+              }
+            },
+            {
+              "args": {
+                "dirname": "/etc"
+              }
+            },
+            {
+              "args": {
+                "dirname": "/var"
+              }
+            }
           ]
         },
         {
           "uid": "reboot",
-          "info" : "Reboot the board",
+          "info": "Reboot the board",
           "encoder": "line",
-          "exec": {"cmdpath": "/usr/redpesk/recovery/scripts/restore_backup.sh", "args": ["--reboot","--force"]}
+          "exec": {
+            "cmdpath": "/usr/redpesk/recovery/scripts/restore_backup.sh",
+            "args": [
+              "--reboot",
+              "--force"
+            ]
+          }
         },
         {
           "uid": "info",
           "info": "Take a backup archive file and restore it on the rootfs partition",
           "encoder": "json",
-          "exec": {"cmdpath": "/usr/redpesk/recovery/scripts/restore_backup.sh", "args": ["--detect","--force"]}
+          "exec": {
+            "cmdpath": "/usr/redpesk/recovery/scripts/restore_backup.sh",
+            "args": [
+              "--detect",
+              "--force"
+            ]
+          }
         },
-	      {
+        {
           "uid": "restore",
           "info": "Take a backup archive file and restore it on the rootfs partition",
-          "usage": {"mode": "xxxx", "part": "yyyy,zzzz"},
+          "usage": {
+            "mode": "xxxx",
+            "part": "yyyy,zzzz"
+          },
           "encoder": "line",
-          "exec": {"cmdpath": "/usr/redpesk/recovery/scripts/restore_backup.sh", "args": ["--mode=?mode?", "--clean=?part?"]},
+          "exec": {
+            "cmdpath": "/usr/redpesk/recovery/scripts/restore_backup.sh",
+            "args": [
+              "--mode=?mode?",
+              "--clean=?part?"
+            ]
+          },
           "sample": [
-            {"args": {"mode": "factory", "part": "rootfs,config"}},
-            {"args": {"mode": "usb", "part": "rootfs"}}
+            {
+              "args": {
+                "mode": "factory",
+                "part": "rootfs,config"
+              }
+            },
+            {
+              "args": {
+                "mode": "usb",
+                "part": "rootfs"
+              }
+            }
           ]
         }
       ]
