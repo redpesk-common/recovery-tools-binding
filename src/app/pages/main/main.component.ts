@@ -23,8 +23,8 @@
  *  https://www.gnu.org/licenses/gpl-3.0.html.
  * $RP_END_LICENSE$
  */
-import { DOCUMENT } from '@angular/common';
-import { Component, ElementRef, HostListener, Inject, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+
+import { Component, ElementRef, HostListener, Inject, OnInit, Renderer2, ViewChild, ViewEncapsulation, DOCUMENT } from '@angular/core';
 import { AFBWebSocketService } from '../../@core/services/AFB-websocket.service';
 import { map, switchMap } from 'rxjs/operators';
 import { LogsService } from './logs.service';

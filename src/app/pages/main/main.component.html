@@ -1,4 +1,4 @@
-<ng-container *ngIf="connected && !recoveryEnd">
+@if (connected && !recoveryEnd) {
   <nav class="navbar navbar-light bg-light sticky-top ms-1 me-1">
     <div>
       <div>
@@ -26,7 +26,7 @@
         mode just loads some basic services as root
         and can repair your system choosing some default actions.
         If booting into recovery mode does not work you can check the <a target="_blank"
-          href="https://docs.redpesk.bzh/docs/en/master/redpesk-os/recovery/2-recovery-usages.html">documentation</a>.</p>
+      href="https://docs.redpesk.bzh/docs/en/master/redpesk-os/recovery/2-recovery-usages.html">documentation</a>.</p>
     </div>
     <div class="border p-3 text-left">
       <div class="d-flex">
@@ -41,8 +41,7 @@
         </span>
       </div>
       <div class="row">
-
-        <ng-container *ngIf="boardInfo$ | async as board">
+        @if (boardInfo$ | async; as board) {
           <div class="col-xl-12 col border-left">
             <strong>General</strong>
             <div class="row mb-3">
@@ -53,14 +52,15 @@
               <div class="col"><strong>{{board.general.mac}}</strong></div>
             </div>
             <strong>Disk Usage</strong>
-            <div class="row" *ngFor="let disk of board.disk_usage">
-              <ng-container *ngIf="disk.name">
-                <div class="col">{{disk.name}}:</div>
-                <div class="col"><strong>{{disk.usage}}%</strong></div>
-                <div class="w-100"></div>
-              </ng-container>
-
-            </div>
+            @for (disk of board.disk_usage; track disk) {
+              <div class="row">
+                @if (disk.name) {
+                  <div class="col">{{disk.name}}:</div>
+                  <div class="col"><strong>{{disk.usage}}%</strong></div>
+                  <div class="w-100"></div>
+                }
+              </div>
+            }
           </div>
           <div class="col-xl-12 col border-left  mt-3">
             <strong>Redpesk</strong>
@@ -91,64 +91,14 @@
               <div class="w-100"></div>
             </div>
           </div>
-        </ng-container>
+        }
       </div>
     </div>
   </div>
-
-</ng-container>
+}
 <main role="main">
-  <ng-template #loading>
-    <div class="container loading">
 
-      <ng-template [ngIf]="!tryToReconnect && !recoveryEnd">
-        <div class="text-center mt-5">
-          <h2>Connecting to
-            <span style="color:#d70000">
-              <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>
-            </span> Recovery tool.
-          </h2>
-          <p>Please wait ...</p>
-        </div>
-        <div class="d-flex justify-content-center mt-2">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      </ng-template>
-
-      <ng-template [ngIf]="tryToReconnect && !recoveryEnd">
-        <div class="mt-5 text-center">
-          <h1>Connection problem!</h1>
-          <img *ngIf="cachedImage" [src]="cachedImage" alt="tux 404">
-          <p>You are not able to connect to the main background process. Maybe
-            <span style="color:#d70000">
-              <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>
-            </span> Recovery tool is open elsewhere.
-          </p>
-          <p>Anyway you can try to <button type="button" class="btn btn-sm btn-danger"
-              (click)="reconnect()">reconnect</button></p>
-        </div>
-      </ng-template>
-
-      <ng-template [ngIf]="recoveryEnd">
-        <div class="text-center mt-5">
-          <img class="img img-responsive" src="../../../assets/redpesk-fish-name.png" alt="logo redpesk">
-          <div class="mt-5">
-            <h1>Recovery Finished</h1>
-            <p>Thank you very much for using <span style="color:#d70000">
-                <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>
-              </span>.
-            </p>
-          </div>
-        </div>
-      </ng-template>
-
-    </div>
-  </ng-template>
-
-  <ng-container *ngIf="connected && !recoveryEnd; else loading">
-
+  @if (connected && !recoveryEnd) {
     <div class="container main">
       <div class="actions mt-4">
         <h4>Choose one of the following actions</h4>
@@ -184,7 +134,7 @@
                       </div>
                       <div class="col-md-2 d-flex justify-content-center">
                         <button type="submit" class="btn btn-sm btn-primary"
-                          [disabled]="checkForm('factoryConfig')">Restore</button>
+                        [disabled]="checkForm('factoryConfig')">Restore</button>
                       </div>
                     </div>
                   </fieldset>
@@ -223,7 +173,7 @@
                       </div>
                       <div class="col-md-2 d-flex justify-content-center">
                         <button type="submit" class="btn btn-sm btn-primary"
-                          [disabled]="checkForm('usbConfig')">Restore</button>
+                        [disabled]="checkForm('usbConfig')">Restore</button>
                       </div>
                     </div>
                   </fieldset>
@@ -247,46 +197,96 @@
             </div>
           </div>
         </div>
-
       </div>
-
-      <ng-container *ngIf="showTerminal()">
+      @if (showTerminal()) {
         <!-- Terminal -->
         <div class="terminal mt-3">
           <div class="terminal-heading"></div>
           <div class="terminal-content">
-            <pre *ngIf="!code.length" class="blinking">_</pre>
+            @if (!code.length) {
+              <pre class="blinking">_</pre>
+            }
             <ng-container>
               <pre #tcontent [innerHtml]="code"></pre>
             </ng-container>
           </div>
         </div>
-
         <div class="mt-2 mb-5 row">
           <div class="col-md-11 col-8">
-            <div *ngIf="finishedAction || canceled" class="copy-buttons">
-              <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-secondary btn-sm" (click)="copyToClipboard()" placement="left"
+            @if (finishedAction || canceled) {
+              <div class="copy-buttons">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button type="button" class="btn btn-secondary btn-sm" (click)="copyToClipboard()" placement="left"
                   ngbTooltip="Copy console output">Copy Console</button>
-              </div>
-              <div class="btn-group ms-2" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-secondary btn-sm" placement="right"
+                </div>
+                <div class="btn-group ms-2" role="group" aria-label="Basic example">
+                  <button type="button" class="btn btn-secondary btn-sm" placement="right"
                   ngbTooltip="Download output and json logs" (click)="download()">Download Logs</button>
+                </div>
               </div>
-            </div>
-            <ngb-progressbar *ngIf="showProgress()" [showValue]="true" type="info" [value]="progress" height="1.5rem">
-            </ngb-progressbar>
+            }
+            @if (showProgress()) {
+              <ngb-progressbar [showValue]="true" type="info" [value]="progress" height="1.5rem">
+              </ngb-progressbar>
+            }
           </div>
           <div class="col-md-1 col-4 text-end">
-            <button *ngIf="showProgress()" class="btn btn-danger btn-sm cancel" (click)="cancel()">Cancel</button>
-            <button *ngIf="finishedAction" class="btn btn-success btn-sm reboot" (click)="reboot()">Reboot Board</button>
+            @if (showProgress()) {
+              <button class="btn btn-danger btn-sm cancel" (click)="cancel()">Cancel</button>
+            }
+            @if (finishedAction) {
+              <button class="btn btn-success btn-sm reboot" (click)="reboot()">Reboot Board</button>
+            }
           </div>
-
         </div>
-      </ng-container>
+      }
     </div>
-
-  </ng-container>
+  } @else {
+    <div class="container loading">
+      @if (!tryToReconnect && !recoveryEnd) {
+        <div class="text-center mt-5">
+          <h2>Connecting to
+            <span style="color:#d70000">
+              <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>
+            </span> Recovery tool.
+          </h2>
+          <p>Please wait ...</p>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }
+      @if (tryToReconnect && !recoveryEnd) {
+        <div class="mt-5 text-center">
+          <h1>Connection problem!</h1>
+          @if (cachedImage) {
+            <img [src]="cachedImage" alt="tux 404">
+          }
+          <p>You are not able to connect to the main background process. Maybe
+            <span style="color:#d70000">
+              <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>
+            </span> Recovery tool is open elsewhere.
+          </p>
+          <p>Anyway you can try to <button type="button" class="btn btn-sm btn-danger"
+          (click)="reconnect()">reconnect</button></p>
+        </div>
+      }
+      @if (recoveryEnd) {
+        <div class="text-center mt-5">
+          <img class="img img-responsive" src="../../../assets/redpesk-fish-name.png" alt="logo redpesk">
+          <div class="mt-5">
+            <h1>Recovery Finished</h1>
+            <p>Thank you very much for using <span style="color:#d70000">
+              <strong style="color: #af0505">red</strong>pesk<sup style="font-size: 50%;">®</sup>
+            </span>.
+          </p>
+        </div>
+      </div>
+    }
+  </div>
+}
 
 </main>
 
