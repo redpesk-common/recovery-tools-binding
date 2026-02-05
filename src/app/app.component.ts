@@ -23,31 +23,30 @@
  *  https://www.gnu.org/licenses/gpl-3.0.html.
  * $RP_END_LICENSE$
  */
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { AFBWebSocketService } from './@core/services/AFB-websocket.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'rpr-root',
+  standalone: true,
+  imports: [RouterOutlet],
   template: '<router-outlet></router-outlet>',
-  styleUrls: ['./app.component.scss'],
-  standalone: false
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  private afbService = inject(AFBWebSocketService);
+
   title = 'recovery-app';
 
-  constructor(
-    private afbService: AFBWebSocketService
-  ) {
+  constructor() {
     this.afbService.Init('api', 'HELLO');
-   }
+  }
 
   ngOnInit(): void {
-    if (environment.production) {
-      this.afbService.SetURL(window.location.host);
-    } else {
-      this.afbService.SetURL(window.location.host);
-    }
+    this.afbService.SetURL(window.location.host);
     this.afbService.Connect();
   }
 }
+

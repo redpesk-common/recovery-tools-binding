@@ -1,4 +1,4 @@
-@if (connected && !recoveryEnd) {
+@if (connected() && !recoveryEnd()) {
   <nav class="navbar navbar-light bg-light sticky-top ms-1 me-1">
     <div>
       <div>
@@ -98,19 +98,19 @@
 }
 <main role="main">
 
-  @if (connected && !recoveryEnd) {
+  @if (connected() && !recoveryEnd()) {
     <div class="container main">
       <div class="actions mt-4">
         <h4>Choose one of the following actions</h4>
         <div ngbAccordion>
-          <div ngbAccordionItem [disabled]="runningAction || !factory">
+          <div ngbAccordionItem [disabled]="runningAction() || !factory()">
             <h2 ngbAccordionHeader>
               <button ngbAccordionButton>1. Restore factory version</button>
             </h2>
             <div ngbAccordionCollapse>
               <div ngbAccordionBody>
                 <form #factoryImage="ngForm" (ngSubmit)="recoverFactoryImage(factoryImage)">
-                  <fieldset [disabled]="runningAction">
+                  <fieldset [disabled]="runningAction()">
                     <div class="row align-items-center">
                       <div class="col-md-4">
                         Choose partition(s) you want to wipe up
@@ -142,14 +142,14 @@
               </div>
             </div>
           </div>
-          <div ngbAccordionItem [disabled]="runningAction  || !usb">
+          <div ngbAccordionItem [disabled]="runningAction()  || !usb()">
             <h2 ngbAccordionHeader>
               <button ngbAccordionButton>2. Restore from USB</button>
             </h2>
             <div ngbAccordionCollapse>
               <div ngbAccordionBody>
                 <form #usbImage="ngForm" (ngSubmit)="recoverUsbImage(usbImage)">
-                  <fieldset [disabled]="runningAction">
+                  <fieldset [disabled]="runningAction()">
                     <div class="row align-items-center">
                       <div class="col-md-4">
                         Choose partition(s) you want to wipe up
@@ -181,7 +181,7 @@
               </div>
             </div>
           </div>
-          <div ngbAccordionItem [disabled]="runningAction">
+          <div ngbAccordionItem [disabled]="runningAction()">
             <h2 ngbAccordionHeader>
               <button ngbAccordionButton>3. Reboot without restoring</button>
             </h2>
@@ -203,17 +203,17 @@
         <div class="terminal mt-3">
           <div class="terminal-heading"></div>
           <div class="terminal-content">
-            @if (!code.length) {
+            @if (!code().length) {
               <pre class="blinking">_</pre>
             }
             <ng-container>
-              <pre #tcontent [innerHtml]="code"></pre>
+              <pre #tcontent [innerHtml]="code()"></pre>
             </ng-container>
           </div>
         </div>
         <div class="mt-2 mb-5 row">
           <div class="col-md-11 col-8">
-            @if (finishedAction || canceled) {
+            @if (finishedAction() || canceled()) {
               <div class="copy-buttons">
                 <div class="btn-group" role="group" aria-label="Basic example">
                   <button type="button" class="btn btn-secondary btn-sm" (click)="copyToClipboard()" placement="left"
@@ -226,7 +226,7 @@
               </div>
             }
             @if (showProgress()) {
-              <ngb-progressbar [showValue]="true" type="info" [value]="progress" height="1.5rem">
+              <ngb-progressbar [showValue]="true" type="info" [value]="progress()" height="1.5rem">
               </ngb-progressbar>
             }
           </div>
@@ -234,7 +234,7 @@
             @if (showProgress()) {
               <button class="btn btn-danger btn-sm cancel" (click)="cancel()">Cancel</button>
             }
-            @if (finishedAction) {
+            @if (finishedAction()) {
               <button class="btn btn-success btn-sm reboot" (click)="reboot()">Reboot Board</button>
             }
           </div>
@@ -243,7 +243,7 @@
     </div>
   } @else {
     <div class="container loading">
-      @if (!tryToReconnect && !recoveryEnd) {
+      @if (!tryToReconnect() && !recoveryEnd()) {
         <div class="text-center mt-5">
           <h2>Connecting to
             <span style="color:#d70000">
@@ -258,7 +258,7 @@
           </div>
         </div>
       }
-      @if (tryToReconnect && !recoveryEnd) {
+      @if (tryToReconnect() && !recoveryEnd()) {
         <div class="mt-5 text-center">
           <h1>Connection problem!</h1>
           @if (cachedImage) {
@@ -273,7 +273,7 @@
           (click)="reconnect()">reconnect</button></p>
         </div>
       }
-      @if (recoveryEnd) {
+      @if (recoveryEnd()) {
         <div class="text-center mt-5">
           <img class="img img-responsive" src="../../../assets/redpesk-fish-name.png" alt="logo redpesk">
           <div class="mt-5">

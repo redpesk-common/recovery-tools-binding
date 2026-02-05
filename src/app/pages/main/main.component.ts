@@ -24,13 +24,16 @@
  * $RP_END_LICENSE$
  */
 
-import { Component, ElementRef, HostListener, Inject, OnInit, Renderer2, ViewChild, ViewEncapsulation, DOCUMENT } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, OnInit, Renderer2, ViewChild, ViewEncapsulation, DOCUMENT, signal, computed, inject } from '@angular/core';
 import { AFBWebSocketService } from '../../@core/services/AFB-websocket.service';
 import { map, switchMap } from 'rxjs/operators';
 import { LogsService } from './logs.service';
 import { saveAs } from 'file-saver-es';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export interface IBoardInfo {
     general: {
@@ -64,15 +67,22 @@ export interface IBoardInfo {
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, NgbModule]
 })
 export class MainComponent implements OnInit {
+    private afbService = inject(AFBWebSocketService);
+    private logService = inject(LogsService);
+    private render = inject(Renderer2);
+    private document = inject(DOCUMENT);
+
     gitTag: string = environment.GIT_TAG;
     year: string = new Date().getFullYear().toString();
     cachedImage: any;
 
-    @ViewChild('tcontent') tcontent: ElementRef<any> = {} as ElementRef;
-    code: string = '';
+    @ViewChild('tcontent') tcontent!: ElementRef;
+    code = signal('');
+
     private _boardInfo = <IBoardInfo>{
         general: {},
         disk_usage: [{}],
@@ -85,21 +95,21 @@ export class MainComponent implements OnInit {
     /**
      * Reconnection counter and setinterval variable
      */
-    _count: number = 0;
+    _count = signal(0);
     private _reconnectInterval: any = null;
 
     /**
      * boolean variable to control flow
      */
-    connected: boolean = false;
-    runningAction: boolean = false;
-    canceled: boolean = false;
-    finishedAction: boolean = false;
-    tryToReconnect: boolean = false;
-    rebooting: boolean = false;
-    recoveryEnd: boolean = false;
-    factory: boolean = false;
-    usb: boolean = false;
+    connected = signal(false);
+    runningAction = signal(false);
+    canceled = signal(false);
+    finishedAction = signal(false);
+    tryToReconnect = signal(false);
+    rebooting = signal(false);
+    recoveryEnd = signal(false);
+    factory = signal(false);
+    usb = signal(false);
 
     /**
      * Config forms settings value for restoring
@@ -115,15 +125,10 @@ export class MainComponent implements OnInit {
         data: false,
         config: false,
     }
-    progress: number = 0;
+    progress = signal(0);
 
-    constructor(
-        private afbService: AFBWebSocketService,
-        private logService: LogsService,
-        @Inject(Renderer2) private render: Renderer2,
-        @Inject(DOCUMENT) private document: Document,
-    ) {
-        afbService.Init('api', 'HELLO');
+    constructor() {
+        this.afbService.Init('api', 'HELLO');
     }
 
     ngOnInit(): void {
@@ -132,11 +137,7 @@ export class MainComponent implements OnInit {
         /**
          * Set afb-daemon url
          */
-        if (environment.production) {
-            this.afbService.SetURL(window.location.host);
-        } else {
-            this.afbService.SetURL(window.location.host);
-        }
+        this.afbService.SetURL(window.location.host);
 
         /**
          * afb-daemon connection
@@ -148,8 +149,8 @@ export class MainComponent implements OnInit {
          */
         this.afbService.Status$?.pipe(
             switchMap((x: any) => {
-                this.connected = x.connected;
-                if (!this.connected && !this.tryToReconnect) {
+                this.connected.set(x.connected);
+                if (!this.connected() && !this.tryToReconnect()) {
                     this._reconnect();
                 }
                 return this._loadBoardInfo();
@@ -217,14 +218,11 @@ export class MainComponent implements OnInit {
                 this._boardInfo.boot_flags.counter = d.data.stdout.boot_flags.counter;
                 this._boardInfo.boot_flags.upgrade_available = d.data.stdout.boot_flags.upgrade_available;
             } else if (d.data.stdout.available_mode) {
-                this.factory = (d.data.stdout.available_mode.factory === '0' ? false : true);
-                this.usb = (d.data.stdout.available_mode.usb === '0' ? false : true);
+                this.factory.set(d.data.stdout.available_mode.factory !== '0');
+                this.usb.set(d.data.stdout.available_mode.usb !== '0');
 
             }
             this.boardInfo$.next(this._boardInfo);
-        }
-        else {
-
         }
     }
 
@@ -232,18 +230,18 @@ export class MainComponent implements OnInit {
         this.logService.push(d);
         if (d.data.stdout) {
             if (d.data.stdout.match(/^\d{1,3}$/)) {
-                this.progress = d.data.stdout;
+                this.progress.set(d.data.stdout);
             } else {
-                this.code += '\n' + d.data.stdout;
+                this.code.update(c => c + '\n' + d.data.stdout);
             }
         }
         if (d.data.stderr) {
-            this.code += '\n<span class="stderr">' + d.data.stderr.toString() + '</span>';
+            this.code.update(c => c + '\n<span class="stderr">' + d.data.stderr.toString() + '</span>');
         }
         if (d.data.status && d.data.status.exit === 0) {
-            if (!this.rebooting) {
-                this.code += '\n' + "Finished.";
-                this.finishedAction = true;
+            if (!this.rebooting()) {
+                this.code.update(c => c + '\n' + "Finished.");
+                this.finishedAction.set(true);
             }
         }
         setTimeout(() => {
@@ -254,28 +252,28 @@ export class MainComponent implements OnInit {
     }
 
     reconnect(): void {
-        this.tryToReconnect = false;
+        this.tryToReconnect.set(false);
         this.afbService.Connect();
     }
 
     private _reconnect(): void {
         if (this._reconnectInterval === null) {
             this._reconnectInterval = setInterval(() => {
-                if (this.connected) {
+                if (this.connected()) {
                     clearInterval(this._reconnectInterval);
-                    this.tryToReconnect = false;
+                    this.tryToReconnect.set(false);
                     this._reconnectInterval = null;
                     return;
                 }
-                if (this._count > 2) {
-                    this.tryToReconnect = true;
+                if (this._count() > 2) {
+                    this.tryToReconnect.set(true);
                     clearInterval(this._reconnectInterval);
                     this._reconnectInterval = null;
-                    this._count = 0;
+                    this._count.set(0);
                     return;
                 }
                 this.afbService.Connect();
-                this._count++;
+                this._count.update(c => c + 1);
             }, 2000);
         }
     }
@@ -296,8 +294,8 @@ export class MainComponent implements OnInit {
             this.afbService.Send('recovery/admin/restore', `{"args":{"mode":"factory","part":"${params.join(',')}"}}`).subscribe((d: any) => {
                 this.logService.push({ command: `recovery/admin/restore, {"args":{"mode":"factory","part":"${params.join(',')}"}}` });
                 this.logService.push(d);
-                this.runningAction = true;
-                this.canceled = false;
+                this.runningAction.set(true);
+                this.canceled.set(false);
             });
             setTimeout(() => {
                 this.tcontent.nativeElement?.offsetParent.scrollIntoView();
@@ -318,11 +316,11 @@ export class MainComponent implements OnInit {
         }
 
         if (params.length) {
-            this.afbService.Send('recovery/admin/restore', `{"args":{"mode":"usb","part":"${params.join(',')}"}}`).subscribe((d:any) => {
+            this.afbService.Send('recovery/admin/restore', `{"args":{"mode":"usb","part":"${params.join(',')}"}}`).subscribe((d: any) => {
                 this.logService.push({ command: `recovery/admin/restore, {"args":{"mode":"usb","part":"${params.join(',')}"}}` });
                 this.logService.push(d);
-                this.runningAction = true;
-                this.canceled = false;
+                this.runningAction.set(true);
+                this.canceled.set(false);
             });
             setTimeout(() => {
                 this.tcontent.nativeElement?.offsetParent.scrollIntoView();
@@ -331,26 +329,26 @@ export class MainComponent implements OnInit {
     }
 
     cancel(): void {
-        this.afbService.Send('recovery/admin/restore', `{"action":"stop", "args": {"signal":"sigterm"}}`).subscribe((d:any) => {
+        this.afbService.Send('recovery/admin/restore', `{"action":"stop", "args": {"signal":"sigterm"}}`).subscribe((d: any) => {
             this.logService.push({ command: `recovery/admin/restore, {"action":"stop", "args": {"signal":"sigterm"}}` });
             this.logService.push(d);
-            this.runningAction = false;
-            this.canceled = true;
-            this.progress = 0;
+            this.runningAction.set(false);
+            this.canceled.set(true);
+            this.progress.set(0);
         });
     }
 
     reboot(): void {
         if (confirm('You are going to reboot the board. Make sure you have copied or downloaded log info.')) {
-            this.rebooting = true;
-            this.afbService.Send('recovery/admin/reboot', `{"action":"start"}`).subscribe((d:any) => {
+            this.rebooting.set(true);
+            this.afbService.Send('recovery/admin/reboot', `{"action":"start"}`).subscribe((d: any) => {
                 this.logService.push(d);
             });
             setTimeout(() => {
                 this.tcontent.nativeElement?.offsetParent.scrollIntoView();
             }, 100);
             setTimeout(() => {
-                this.recoveryEnd = true;
+                this.recoveryEnd.set(true);
             }, 6000);
         }
     }
@@ -358,7 +356,7 @@ export class MainComponent implements OnInit {
     copyToClipboard(): void {
         const textarea = document.createElement('textarea');
         this.render.appendChild(this.document.activeElement, textarea);
-        const value = this.code.replace(/<\/?[^>]+(>|$)/g, '');
+        const value = this.code().replace(/<\/?[^>]+(>|$)/g, '');
         textarea.value = value;
         textarea.select();
         this.document.execCommand('copy');
@@ -367,7 +365,7 @@ export class MainComponent implements OnInit {
 
     checkForm(typeConfig: string): boolean {
         let disabled: any = false;
-        var config = {};
+        var config: any = {};
         switch (typeConfig) {
             case 'factoryConfig':
                 config = this.factoryConfig;
@@ -379,23 +377,23 @@ export class MainComponent implements OnInit {
             default:
                 return true;
         }
-        Object.entries(config).map((a: any) => {
-            disabled |= a[1];
+        Object.entries(config).forEach(([key, value]) => {
+            disabled = disabled || value;
         });
         return !disabled;
     }
 
     showTerminal(): boolean {
-        return this.runningAction || this.finishedAction || this.canceled || this.rebooting;
+        return this.runningAction() || this.finishedAction() || this.canceled() || this.rebooting();
     }
 
     showProgress(): boolean {
-        return this.runningAction && !this.finishedAction;
+        return this.runningAction() && !this.finishedAction();
     }
 
     download(): void {
         let logs: any = {}
-        logs.terminal = this.code.replace(/<\/?[^>]+(>|$)/g, '');
+        logs.terminal = this.code().replace(/<\/?[^>]+(>|$)/g, '');
         logs.events = this.logService.getLogs();
         const file = new Blob([JSON.stringify(logs)], {
             type: 'text/plain;charset=utf-8'
@@ -403,3 +401,4 @@ export class MainComponent implements OnInit {
         saveAs(file, Date.now() + '-redpesk-recovery-logs.json');
     }
 }
+
