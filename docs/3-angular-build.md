@@ -15,7 +15,7 @@ On the target which contains the recovery web application, you can launch the ap
 --name=recovery-app \
 --workdir=/usr/redpesk/recovery/ \
 --port=8080 \
---roothttp=./webapp/ \
+--roothttp=./webapp/browser \
 --binding=/usr/redpesk/spawn-binding/lib/spawn-binding.so:/usr/redpesk/recovery/conf/spawn-recovery-config.json -vvv
 ```
 
