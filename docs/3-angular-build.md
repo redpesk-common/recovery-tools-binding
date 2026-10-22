@@ -8,7 +8,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Launch with afb-binder
 
-On the target which contains the recovery web application, you can launch the app:
+On the target which contains the recovery web application, you can launch the recovery application:
 
 ```sh
 /usr/bin/afb-binder \

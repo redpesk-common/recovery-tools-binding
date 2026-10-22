@@ -4,7 +4,7 @@
 
 ### recovery-tools-binding
 
-By default, the redpesk OS recovery feature isn't activated so it requires the installation of `recovery-tools-binding-scripts` on your redpesk OS image. This package contains necessary [scripts]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#useable-tool-help %}) needed for recovery mode activation.
+By default, the redpesk OS recovery feature isn't activated so it requires the installation of `recovery-tools-binding-scripts` on your redpesk OS image. This package contains the [scripts]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#useable-tool-help %}) needed for recovery mode activation.
 
 ```sh
 dnf install recovery-tools-binding-scripts
@@ -16,11 +16,11 @@ rpm -ql recovery-tools-binding-scripts
 /usr/redpesk/recovery/scripts/restore_backup.sh
 ```
 
-It is possible to avoid the `recovery-tools-binding-scripts` installation on your target. More details [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#force-the-recovery-mode-from-the-bootloader %}).
+It is possible to avoid the `recovery-tools-binding-scripts` installation on your target (more details [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#force-the-recovery-mode-from-the-bootloader %})).
 
 ### Example on a supported board
 
-For example, you want to enable the recovery mode on the [SolidRun SolidSense N8 Edge Gateway]({% chapter_link boards-arm64-doc.solidrun---solidsense %}) board. Some others packages are required like [spawn-binding]({% chapter_link spawn_binding.architecture-presentation %}) but they are automatically installed as dependencies with the `recovery-tools-binding` package. So, as explained above, you first need to install `recovery-tools-binding-scripts` on the board:
+For example, let's say you want to enable the recovery mode on the [SolidRun SolidSense N8 Edge Gateway]({% chapter_link boards-arm64-doc.solidrun---solidsense %}) board. Some others packages are required like [spawn-binding]({% chapter_link spawn_binding.architecture-presentation %}) but they are automatically installed as dependencies with the `recovery-tools-binding` package. So, as explained above, you first need to install `recovery-tools-binding-scripts` on the board:
 
 ```
 [root@localhost ~]# dnf install recovery-tools-binding-scripts
@@ -74,7 +74,7 @@ Please note that the following process can be adapted to your needs [on demand](
 
 ### Activating recovery mode
 
-You must enable the recovery tools by doing the following action:
+You must enable the recovery tools by executing the following commands:
 
 ```
 /usr/redpesk/recovery/scripts/check-update.sh -s=0,1
@@ -89,9 +89,9 @@ UPGRADE   : 1
 =========================
 ```
 
-To understand what it does, the script adds the `upgrade_available` variable to U-Boot's environment by using `fw_setenv` to write to `/var/lib/rp-recovery/uboot-env.config`. Please refer [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#rebooting-to-recovery-mode %}) for more U-Boot details.
+To understand what it does, the script adds the `upgrade_available` variable to U-Boot's environment by using `fw_setenv` to write to `/var/lib/rp-recovery/uboot-env.config`. Please refer to [here]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#rebooting-to-recovery-mode %}) for more U-Boot details.
 
-It has added the `upgrade_available` variable into the U-Boot's environment config:
+The script has added the `upgrade_available` variable into the U-Boot's environment config:
 
 ```
 soc_type=imx8mn
@@ -102,7 +102,7 @@ vendor=solidrun
 
 ### Rebooting to recovery mode
 
-The system will automatically go into recovery mode  the third time it boots if you [activate]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#rebooting-to-recovery-mode %}) the recovery mode. Indeed, the `BOOTCOUNT` variable is increased at each boot by the U-Boot bootloader. The limit to its variable is normally `3` that's why you will go into recovery mode with this value.
+The system will automatically go into recovery mode the third time it boots if you [activate]({% chapter_link recovery-tools-binding.restoring-redpesk-os-guide#rebooting-to-recovery-mode %}) the recovery mode. Indeed, the bootcount variable is increased at each boot by the U-Boot bootloader. `CONFIG_BOOTCOUNT_LIMIT` being usually set to `3`, the system will go into recovery mode after `2` boot failures.
 
 ```
 Normal Boot
@@ -145,27 +145,27 @@ DRACUT_VERSION="057-21.git20230214.baseos.rpbatz"
 
 ## redpesk OS recovery modes
 
-You can access the `recovery-tools-binding` web interface on the network interface of your board, port **8080**:
+You can access the `recovery-tools-binding` web interface on the network interface of your board, on port **8080**:
 
 ![recovery-interface](assets/recovery-menu.png)
 
-If you don't have any `backup.tar.gz` on both factory and USB modes, you can only choose a reboot without any recovery actions.
+If you don't have any `backup.tar.gz` in both factory and USB modes, you can only choose a reboot without any recovery actions.
 
 ### Restoring redpesk OS from factory version
 
-This modes wipes the `/rootfs` partition then rewrites it with the image which is present in `/recovery/backup.tar.gz`.
+This mode wipes the `/rootfs` partition then rewrites it with the image which is present in `/recovery/backup.tar.gz`.
 
-You can choose to recover others partitions such as `/data` and `config` if you select these items.
+You can choose to recover other partitions such as `/data` and `config` if you select these items.
 
 ![recovery-factory](assets/recovery-restore-factory.png)
 
 ### Restoring redpesk from USB
 
-This modes wipes the `/rootfs` partition then rewrites it with the image which is present in `/usb-backup/backup.tar.gz`. So you have to create a USB key which will contain this backup tarball as the **same output name** with the same path when it's mounted in the initramfs.
+This modes wipes the `/rootfs` partition then rewrites it with the image which is present in `/usb-backup/backup.tar.gz`. So you have to create a USB key which will contain this backup tarball with the **same output name** and the same path than when it's mounted in the initramfs.
 
-*NOTE: The recovery mode (initramfs) only supports FAT32 partitions for mounted partitions. So because of FAT32 limitations, your partition label must be named **usb-backup** that the recovery is looking for.*
+*NOTE: The recovery mode (initramfs) only supports FAT32 partitions for mounted partitions. So because of FAT32 limitations, your partition label must be named **usb-backup** as the recovery process will be looking for this.*
 
-You can choose to recover others partitions such as `/data` and `config` if you select these items.
+You can choose to recover other partitions such as `/data` and `config` if you select these items.
 
 ![recovery-usb](assets/recovery-restore-usb.png)
 
@@ -223,7 +223,7 @@ u-boot=> source ${scriptaddr}
 
 ## Useable tool help
 
-As described above, these following scripts are installed on redpesk OS when you install the `recovery-tools-binding-scripts` package. They are useful for recovery features interaction such as enabling the bootcount variable in the U-Boot bootloader.
+As described above, the following scripts are installed on redpesk OS when you install the `recovery-tools-binding-scripts` package. They are useful for recovery features interaction such as enabling the bootcount variable in the U-Boot bootloader.
 
 - check_board.sh
 
